@@ -49,7 +49,7 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FormItemDescriptor itemDescriptor = parent.getAdapter().getItem(position);
+                FormItemDescriptor itemDescriptor = (FormItemDescriptor)parent.getAdapter().getItem(position);
 
                 Cell cell = itemDescriptor.getCell();
                 if (cell != null && itemDescriptor instanceof RowDescriptor) {
