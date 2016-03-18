@@ -7,6 +7,7 @@ import com.quemb.qmbform.descriptor.Value;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.v7.widget.SwitchCompat;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -15,7 +16,7 @@ import android.widget.Switch;
  */
 public class FormBooleanFieldCell extends FormBaseCell {
 
-    private Switch mSwitch;
+    private SwitchCompat mSwitch;
 
     public FormBooleanFieldCell(Context context,
                                 RowDescriptor rowDescriptor) {
@@ -27,7 +28,7 @@ public class FormBooleanFieldCell extends FormBaseCell {
 
         super.init();
 
-        mSwitch = (Switch) findViewById(R.id.switchControl);
+        mSwitch = (SwitchCompat) findViewById(R.id.switchControl);
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -58,7 +59,7 @@ public class FormBooleanFieldCell extends FormBaseCell {
 
     }
 
-    public Switch getSwitch() {
+    public SwitchCompat getSwitch() {
         return mSwitch;
     }
 }

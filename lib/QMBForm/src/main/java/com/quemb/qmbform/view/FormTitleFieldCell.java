@@ -4,6 +4,7 @@ import com.quemb.qmbform.R;
 import com.quemb.qmbform.descriptor.RowDescriptor;
 
 import android.content.Context;
+import android.util.TypedValue;
 import android.widget.TextView;
 
 /**
@@ -21,7 +22,10 @@ public class FormTitleFieldCell extends FormBaseCell {
     protected void init() {
         super.init();
         mTextView = (TextView) findViewById(R.id.textView);
-        mTextView.setTextColor(R.attr.editTextColor);
+        TypedValue typedValue = new TypedValue();
+        getContext().getTheme().resolveAttribute(R.attr.editTextColor, typedValue, true);
+        final int color = typedValue.data;
+        mTextView.setTextColor(color);
         mTextView.setTextAppearance(getContext(), R.style.Base_TextAppearance_AppCompat_Body2);
     }
 

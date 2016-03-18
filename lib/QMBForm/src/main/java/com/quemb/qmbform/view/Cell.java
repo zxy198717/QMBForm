@@ -38,9 +38,9 @@ public abstract class Cell extends LinearLayout {
         setOrientation(LinearLayout.VERTICAL);
         setGravity(Gravity.CENTER);
 
-        int resource = getResource();
+        int resource = mFormItemDescriptor.getResourceId() > 0 ? mFormItemDescriptor.getResourceId() : getResource();
         if (resource > 0) {
-            inflate(getContext(), getResource(), getSuperViewForLayoutInflation());
+            inflate(getContext(), resource, getSuperViewForLayoutInflation());
         }
 
         if (shouldAddDivider()) {
