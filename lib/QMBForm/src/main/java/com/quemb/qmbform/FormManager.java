@@ -12,6 +12,7 @@ import com.quemb.qmbform.view.Cell;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -131,6 +132,29 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
     public void setOnFormRowValueChangedListener(
             OnFormRowValueChangedListener onFormRowValueChangedListener) {
         mOnFormRowValueChangedListener = onFormRowValueChangedListener;
+    }
+
+    public FormDescriptor getFormDescriptor() {
+        return mFormDescriptor;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        for (int i=mListView.getFirstVisiblePosition();i<=mListView.getLastVisiblePosition();i++) {
+            Cell cell = (Cell)mListView.getChildAt(i);
+            if(cell.isWaitingActivityResult()) {
+                cell.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+        /*
+        for(SectionDescriptor sectionDescriptor: mFormDescriptor.getSections()) {
+            for(RowDescriptor rowDescriptor: sectionDescriptor.getRows()) {
+                if(rowDescriptor.getCell() != null && rowDescriptor.getCell().isWaitingActivityResult()) {
+                    rowDescriptor.getCell().onActivityResult(requestCode, resultCode, data);
+                    break;
+                }
+            }
+        }
+        */
     }
 }
 

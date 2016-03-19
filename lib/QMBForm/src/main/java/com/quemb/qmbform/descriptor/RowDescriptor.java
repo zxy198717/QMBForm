@@ -64,6 +64,7 @@ public class RowDescriptor<T> extends FormItemDescriptor {
     public static final String FormRowDescriptorTypeBooleanSwitch = "booleanSwitch";
     public static final String FormRowDescriptorTypeButton = "button";
     public static final String FormRowDescriptorTypeButtonInline = "buttonInline";
+    public static final String FormRowDescriptorTypeMultipleImage = "multipleImage";
     public static final String FormRowDescriptorTypeImage = "image";
     public static final String FormRowDescriptorTypeWeb = "web";
     public static final String FormRowDescriptorTypeExternal = "external";

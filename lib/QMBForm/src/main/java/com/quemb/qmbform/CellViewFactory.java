@@ -31,7 +31,9 @@ import com.quemb.qmbform.view.FormEditTextViewFieldCell;
 import com.quemb.qmbform.view.FormEditTextViewInlineFieldCell;
 import com.quemb.qmbform.view.FormEditURLFieldCell;
 import com.quemb.qmbform.view.FormExternalButtonFieldCell;
+import com.quemb.qmbform.view.FormImageFieldCell;
 import com.quemb.qmbform.view.FormIntegerSliderFieldCell;
+import com.quemb.qmbform.view.FormMultipleImageFieldCell;
 import com.quemb.qmbform.view.FormPickerDialogFieldCell;
 import com.quemb.qmbform.view.FormPickerDialogVerticalFieldCell;
 import com.quemb.qmbform.view.FormSelectorSegmentedControlFieldCell;
@@ -115,6 +117,8 @@ public class CellViewFactory {
         mViewRowTypeMap.put(RowDescriptor.FormRowDescriptorTypeHTMLText, FormEditHTMLTextViewFieldCell.class);
         mViewRowTypeMap.put(RowDescriptor.FormRowDescriptorTypeSectionSeperator, SeperatorSectionCell.class);
         mViewRowTypeMap.put(RowDescriptor.FormRowDescriptorTypeHtmlVertical, FormDetailHtmlTextVerticalFieldCell.class);
+        mViewRowTypeMap.put(RowDescriptor.FormRowDescriptorTypeImage, FormImageFieldCell.class);
+        mViewRowTypeMap.put(RowDescriptor.FormRowDescriptorTypeMultipleImage, FormMultipleImageFieldCell.class);
     }
 
     public Cell createViewForFormItemDescriptor(Context context, FormItemDescriptor descriptor) {

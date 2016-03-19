@@ -2,6 +2,7 @@ package com.quemb.qmbform.sample.controller;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -79,6 +80,14 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
 
         SectionDescriptor sectionDescriptor = SectionDescriptor.newInstance("section","Text Inputs");
         descriptor.addSection(sectionDescriptor);
+
+        RowDescriptor rowDescriptor = RowDescriptor.newInstance("image", RowDescriptor.FormRowDescriptorTypeImage, "Image");
+        rowDescriptor.setFragment(this);
+        sectionDescriptor.addRow(rowDescriptor);
+
+        RowDescriptor rowDescriptorImages = RowDescriptor.newInstance("images", RowDescriptor.FormRowDescriptorTypeMultipleImage, "Images");
+        rowDescriptorImages.setFragment(this);
+        sectionDescriptor.addRow(rowDescriptorImages);
 
         sectionDescriptor.addRow( RowDescriptor.newInstance("detail", RowDescriptor.FormRowDescriptorTypeTextInline, "Title",new Value<String>("Detail")) );
         sectionDescriptor.addRow( RowDescriptor.newInstance("detail", RowDescriptor.FormRowDescriptorTypeText, "Title",new Value<String>("Detail")) );
@@ -248,6 +257,12 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
         updateSaveItem();
 
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mFormManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void updateSaveItem() {

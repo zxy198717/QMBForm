@@ -3,6 +3,7 @@ package com.quemb.qmbform.view;
 import com.quemb.qmbform.descriptor.FormItemDescriptor;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -18,6 +19,8 @@ public abstract class Cell extends LinearLayout {
     private FormItemDescriptor mFormItemDescriptor;
 
     private View mDividerView;
+
+    private boolean mWaitingActivityResult;
 
     public Cell(Context context, FormItemDescriptor formItemDescriptor) {
         super(context);
@@ -109,6 +112,29 @@ public abstract class Cell extends LinearLayout {
 
     protected void setDividerView(View dividerView) {
         mDividerView = dividerView;
+    }
+
+    protected void startActivityForResult(Intent intent, int requestCode) {
+        mWaitingActivityResult = true;
+        mFormItemDescriptor.getFragment().startActivityForResult(intent, requestCode);
+    }
+
+    protected void setWaitingActivityResult(boolean mWaitingActivityResult) {
+        this.mWaitingActivityResult = mWaitingActivityResult;
+    }
+
+    public boolean isWaitingActivityResult() {
+        return mWaitingActivityResult;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(mWaitingActivityResult) {
+            activityResult(requestCode, resultCode, data);
+        }
+    }
+
+    protected void activityResult(int requestCode, int resultCode, Intent data){
+
     }
 
 }

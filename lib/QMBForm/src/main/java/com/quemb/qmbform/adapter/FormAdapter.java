@@ -5,6 +5,7 @@ import com.quemb.qmbform.descriptor.FormDescriptor;
 import com.quemb.qmbform.descriptor.FormItemDescriptor;
 import com.quemb.qmbform.descriptor.RowDescriptor;
 import com.quemb.qmbform.descriptor.SectionDescriptor;
+import com.quemb.qmbform.view.Cell;
 
 import android.content.Context;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by tonimoeckel on 14.07.14.
@@ -66,8 +68,10 @@ public class FormAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        FormItemDescriptor rowDescriptor = getItem(position);
+        Cell cell = CellViewFactory.getInstance().createViewForFormItemDescriptor(mContext, getItem(position));
 
-        return CellViewFactory.getInstance().createViewForFormItemDescriptor(mContext, getItem(position));
+        return cell;
     }
 
 

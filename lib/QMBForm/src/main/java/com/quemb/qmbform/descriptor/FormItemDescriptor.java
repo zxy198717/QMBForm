@@ -1,6 +1,7 @@
 package com.quemb.qmbform.descriptor;
 
 import android.support.annotation.LayoutRes;
+import android.support.v4.app.Fragment;
 
 import com.quemb.qmbform.OnFormRowClickListener;
 import com.quemb.qmbform.view.Cell;
@@ -22,6 +23,8 @@ public class FormItemDescriptor {
     private HashMap<String, Object> mCellConfig;
 
     private int resourceId;
+
+    private Fragment fragment;
 
     public String getTitle() {
         return mTitle;
@@ -70,5 +73,13 @@ public class FormItemDescriptor {
 
     public int getResourceId() {
         return resourceId;
+    }
+
+    public Fragment getFragment() {
+        return fragment;
+    }
+
+    public void setFragment(Fragment fragment) {
+        this.fragment = fragment;
     }
 }
