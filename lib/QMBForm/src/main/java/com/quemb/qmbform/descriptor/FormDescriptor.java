@@ -148,7 +148,9 @@ public class FormDescriptor {
         Map<String, Object> m = new HashMap<String, Object>();
         for (SectionDescriptor section : getSections()) {
             for (RowDescriptor row : section.getRows()) {
-                m.put(row.getTag(), row.getValueData());
+                if(row.getValue() != null && row.getValueData() != null) {
+                    m.put(row.getTag(), row.getValueData());
+                }
             }
         }
         return m;
