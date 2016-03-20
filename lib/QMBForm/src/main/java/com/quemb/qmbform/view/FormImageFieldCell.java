@@ -72,8 +72,8 @@ public class FormImageFieldCell extends FormTitleFieldCell {
                     @Override
                     public void run() {
                         imageView.setImageURI(source);
-                        onValueChanged(new Value<String>(image
-                                .getFileThumbnailSmall()));
+                        onValueChanged(new Value<String>(crop ? image
+                                .getFileThumbnailSmall() : image.getFileThumbnail()));
                     }
                 });
                 setWaitingActivityResult(false);
