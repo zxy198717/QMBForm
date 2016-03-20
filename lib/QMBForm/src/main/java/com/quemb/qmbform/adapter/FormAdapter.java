@@ -6,6 +6,7 @@ import com.quemb.qmbform.descriptor.FormItemDescriptor;
 import com.quemb.qmbform.descriptor.RowDescriptor;
 import com.quemb.qmbform.descriptor.SectionDescriptor;
 import com.quemb.qmbform.view.Cell;
+import com.quemb.qmbform.view.FormImageFieldCell;
 
 import android.content.Context;
 import android.view.View;

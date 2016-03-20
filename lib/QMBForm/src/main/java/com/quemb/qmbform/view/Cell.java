@@ -2,9 +2,12 @@ package com.quemb.qmbform.view;
 
 import com.quemb.qmbform.descriptor.FormItemDescriptor;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -30,6 +33,19 @@ public abstract class Cell extends LinearLayout {
         update();
         afterInit();
 
+        IntentFilter intentFilter = new IntentFilter();
+
+        intentFilter.addAction("new_waiting_activity_result");
+
+        getContext().registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String tag = intent.getStringExtra("row_tag");
+                if (mFormItemDescriptor.getTag() !=null &&!mFormItemDescriptor.getTag().equals(tag)) {
+                    setWaitingActivityResult(false);
+                }
+            }
+        }, intentFilter);
     }
 
     protected void afterInit() {
@@ -68,7 +84,6 @@ public abstract class Cell extends LinearLayout {
 
         mFormItemDescriptor = formItemDescriptor;
         mFormItemDescriptor.setCell(this);
-
     }
 
     public void onCellSelected() {
@@ -121,6 +136,11 @@ public abstract class Cell extends LinearLayout {
 
     protected void setWaitingActivityResult(boolean mWaitingActivityResult) {
         this.mWaitingActivityResult = mWaitingActivityResult;
+        if (mWaitingActivityResult) {
+            Intent intent = new Intent("new_waiting_activity_result");
+            intent.putExtra("row_tag", mFormItemDescriptor.getTag());
+            getContext().sendBroadcast(intent);
+        }
     }
 
     public boolean isWaitingActivityResult() {

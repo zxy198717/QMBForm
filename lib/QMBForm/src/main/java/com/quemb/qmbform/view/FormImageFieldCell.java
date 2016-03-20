@@ -27,6 +27,8 @@ public class FormImageFieldCell extends FormTitleFieldCell {
 
     private ImageView imageView;
 
+    private boolean crop;
+
     public FormImageFieldCell(Context context, RowDescriptor rowDescriptor) {
         super(context, rowDescriptor);
     }
@@ -50,15 +52,19 @@ public class FormImageFieldCell extends FormTitleFieldCell {
         if(value != null && value.getValue() != null) {
             Glide.with(getContext()).load(value.getValue()).into(imageView);
         }
+
+        if (getRowDescriptor().getCellConfig() != null && getRowDescriptor().getCellConfig().containsKey("crop")) {
+            crop = (boolean) getRowDescriptor().getCellConfig().get("crop");
+        }
     }
 
     @Override
     public void onCellSelected() {
         super.onCellSelected();
         setWaitingActivityResult(true);
-        mImagePickerManager.pickImage(true, new ImagePickerManager.ImagePickerListener() {
+        mImagePickerManager.pickImage(crop, new ImagePickerManager.ImagePickerListener() {
             @Override
-            public void onImageChosen(ChosenImage image) {
+            public void onImageChosen(final ChosenImage image) {
 
                 final Uri source = Uri.parse(new File(image
                         .getFileThumbnailSmall()).toString());
@@ -66,11 +72,12 @@ public class FormImageFieldCell extends FormTitleFieldCell {
                     @Override
                     public void run() {
                         imageView.setImageURI(source);
+                        onValueChanged(new Value<String>(image
+                                .getFileThumbnailSmall()));
                     }
                 });
                 setWaitingActivityResult(false);
-                onValueChanged(new Value<String>(image
-                        .getFileThumbnailSmall()));
+
             }
 
             @Override
