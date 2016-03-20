@@ -25,6 +25,16 @@ public abstract class Cell extends LinearLayout {
 
     private boolean mWaitingActivityResult;
 
+    BroadcastReceiver NewWaitingBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String tag = intent.getStringExtra("row_tag");
+            if (mFormItemDescriptor.getTag() !=null &&!mFormItemDescriptor.getTag().equals(tag)) {
+                setWaitingActivityResult(false);
+            }
+        }
+    };
+
     public Cell(Context context, FormItemDescriptor formItemDescriptor) {
         super(context);
         setFormItemDescriptor(formItemDescriptor);
@@ -37,15 +47,7 @@ public abstract class Cell extends LinearLayout {
 
         intentFilter.addAction("new_waiting_activity_result");
 
-        getContext().registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String tag = intent.getStringExtra("row_tag");
-                if (mFormItemDescriptor.getTag() !=null &&!mFormItemDescriptor.getTag().equals(tag)) {
-                    setWaitingActivityResult(false);
-                }
-            }
-        }, intentFilter);
+        getContext().registerReceiver(NewWaitingBroadcastReceiver, intentFilter);
     }
 
     protected void afterInit() {
@@ -66,6 +68,17 @@ public abstract class Cell extends LinearLayout {
             addView(getDividerView());
         }
 
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        getContext().unregisterReceiver(NewWaitingBroadcastReceiver);
     }
 
     protected ViewGroup getSuperViewForLayoutInflation() {
