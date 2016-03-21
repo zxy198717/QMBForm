@@ -16,6 +16,8 @@ import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.HeaderViewListAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 /**
@@ -83,7 +85,15 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
     }
 
     public void updateRows() {
-        FormAdapter adapter = (FormAdapter) mListView.getAdapter();
+
+        ListAdapter listAdapter = mListView.getAdapter();
+        FormAdapter adapter = null;
+        if (listAdapter instanceof HeaderViewListAdapter) {
+            adapter = (FormAdapter)((HeaderViewListAdapter)listAdapter).getWrappedAdapter();
+        } else {
+            adapter = (FormAdapter) listAdapter;
+        }
+
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -145,16 +155,6 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
                 cell.onActivityResult(requestCode, resultCode, data);
             }
         }
-        /*
-        for(SectionDescriptor sectionDescriptor: mFormDescriptor.getSections()) {
-            for(RowDescriptor rowDescriptor: sectionDescriptor.getRows()) {
-                if(rowDescriptor.getCell() != null && rowDescriptor.getCell().isWaitingActivityResult()) {
-                    rowDescriptor.getCell().onActivityResult(requestCode, resultCode, data);
-                    break;
-                }
-            }
-        }
-        */
     }
 }
 
