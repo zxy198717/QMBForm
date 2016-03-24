@@ -151,7 +151,7 @@ public abstract class Cell extends LinearLayout {
     }
 
     protected void startActivityForResult(Intent intent, int requestCode) {
-        mWaitingActivityResult = true;
+        setWaitingActivityResult(true);
         if (mFormItemDescriptor.getFragment() != null) {
             mFormItemDescriptor.getFragment().startActivityForResult(intent, requestCode);
         } else {

@@ -3,6 +3,7 @@ package com.quemb.qmbform.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
@@ -70,24 +71,19 @@ public class FormImageFieldCell extends FormTitleFieldCell {
         mImagePickerManager.pickImage(crop, new ImagePickerManager.ImagePickerListener() {
             @Override
             public void onImageChosen(final ChosenImage image) {
-
-                final Uri source = Uri.parse(new File(image
-                        .getFileThumbnailSmall()).toString());
                 imageView.post(new Runnable() {
                     @Override
                     public void run() {
-                        imageView.setImageURI(source);
+                        imageView.setImageBitmap(BitmapFactory.decodeFile(image.getFileThumbnailSmall()));
                         onValueChanged(new Value<String>(crop ? image
                                 .getFileThumbnailSmall() : image.getFileThumbnail()));
                     }
                 });
-                setWaitingActivityResult(false);
-
             }
 
             @Override
             public void onError(String reason) {
-                setWaitingActivityResult(false);
+                showToast(reason);
             }
         });
     }
