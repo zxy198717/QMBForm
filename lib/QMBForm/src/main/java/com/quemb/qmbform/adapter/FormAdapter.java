@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by tonimoeckel on 14.07.14.
@@ -44,7 +45,13 @@ public class FormAdapter extends BaseAdapter {
                 mItems.add(sectionDescriptor);
             }
 
-            mItems.addAll(sectionDescriptor.getRows());
+            List<RowDescriptor> rows = sectionDescriptor.getRows();
+            if (rows.size() > 0) {
+                rows.get(0).setIsFirstInSection(true);
+                rows.get(rows.size() - 1).setIsLastInSection(true);
+            }
+
+            mItems.addAll(rows);
 
             if (getEnableSectionSeperator() && sectionCount < mFormDescriptor.getSections().size()) {
                 mItems.add(RowDescriptor.newInstance(null, RowDescriptor.FormRowDescriptorTypeSectionSeperator));

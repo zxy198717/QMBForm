@@ -26,6 +26,9 @@ public class FormItemDescriptor {
 
     private Fragment fragment;
 
+    private boolean isFirstInSection;
+    private boolean isLastInSection;
+
     public String getTitle() {
         return mTitle;
     }
@@ -50,6 +53,21 @@ public class FormItemDescriptor {
         mCell = cell;
     }
 
+    public void setIsFirstInSection(boolean isFirstInSection) {
+        this.isFirstInSection = isFirstInSection;
+    }
+
+    public void setIsLastInSection(boolean isLastInSection) {
+        this.isLastInSection = isLastInSection;
+    }
+
+    public boolean isLastInSection() {
+        return isLastInSection;
+    }
+
+    public boolean isFirstInSection() {
+        return isFirstInSection;
+    }
 
     public OnFormRowClickListener getOnFormRowClickListener() {
         return mOnFormRowClickListener;

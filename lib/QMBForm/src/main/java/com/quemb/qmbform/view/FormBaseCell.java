@@ -55,6 +55,7 @@ public abstract class FormBaseCell extends Cell {
         if (getRowDescriptor().getSectionDescriptor() != null && this.getRowDescriptor().getSectionDescriptor().isMultivalueSection()) {
             LinearLayout linearLayout = createMultiValueWrapper();
             addView(linearLayout);
+
             return linearLayout;
         }
         return super.getSuperViewForLayoutInflation();

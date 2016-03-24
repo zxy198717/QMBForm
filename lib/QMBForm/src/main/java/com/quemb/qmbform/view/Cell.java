@@ -1,19 +1,20 @@
 package com.quemb.qmbform.view;
 
-import com.quemb.qmbform.descriptor.FormItemDescriptor;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.quemb.qmbform.R;
+import com.quemb.qmbform.descriptor.FormItemDescriptor;
+import com.quemb.qmbform.descriptor.SectionDescriptor;
 
 /**
  * Created by tonimoeckel on 14.07.14.
@@ -114,10 +115,15 @@ public abstract class Cell extends LinearLayout {
 
     private void configDivider(View dividerView) {
 
-        dividerView.setLayoutParams(new LayoutParams(
+        LinearLayout.LayoutParams params = new LayoutParams(
                 LayoutParams.MATCH_PARENT,
                 1
-        ));
+        );
+        if ( !(getFormItemDescriptor() instanceof SectionDescriptor) && !(this instanceof SeperatorSectionCell) && !getFormItemDescriptor().isLastInSection()) {
+            params.setMargins(getResources().getDimensionPixelSize(R.dimen.cell_padding), 0, 0, 0);
+        }
+
+        dividerView.setLayoutParams(params);
 
         dividerView.setBackgroundColor(getThemeValue(android.R.attr.listDivider));
 

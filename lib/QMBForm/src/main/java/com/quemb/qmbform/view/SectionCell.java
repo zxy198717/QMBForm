@@ -48,7 +48,7 @@ public class SectionCell extends Cell {
 
     @Override
     public boolean shouldAddDivider() {
-        return false;
+        return true;
     }
 
     public SectionDescriptor getSectionDescriptor() {

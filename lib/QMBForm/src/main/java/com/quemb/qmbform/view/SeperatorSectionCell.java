@@ -28,7 +28,7 @@ public class SeperatorSectionCell extends FormBaseCell {
 
     @Override
     public boolean shouldAddDivider() {
-        return false;
+        return true;
     }
 
     @Override
