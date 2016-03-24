@@ -74,7 +74,7 @@ public class FormImageFieldCell extends FormTitleFieldCell {
                 imageView.post(new Runnable() {
                     @Override
                     public void run() {
-                        imageView.setImageBitmap(BitmapFactory.decodeFile(image.getFileThumbnailSmall()));
+                        Glide.with(getContext()).load(image.getFileThumbnailSmall()).into(imageView);
                         onValueChanged(new Value<String>(crop ? image
                                 .getFileThumbnailSmall() : image.getFileThumbnail()));
                     }
