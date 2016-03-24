@@ -8,5 +8,6 @@
     <color name="transparentColor">#00000000</color>
     <color name="redColor">#ffa13b3a</color>
     <color name="greenColor">#ff55a14d</color>
+    <color name="section_color">#F6F7F8</color>
 
 </resources>
