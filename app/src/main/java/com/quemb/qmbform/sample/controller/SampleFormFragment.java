@@ -82,11 +82,9 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
         descriptor.addSection(sectionDescriptor);
 
         RowDescriptor rowDescriptor = RowDescriptor.newInstance("image", RowDescriptor.FormRowDescriptorTypeImage, "Image");
-        rowDescriptor.setFragment(this);
         sectionDescriptor.addRow(rowDescriptor);
 
         RowDescriptor rowDescriptorImages = RowDescriptor.newInstance("images", RowDescriptor.FormRowDescriptorTypeMultipleImage, "Images");
-        rowDescriptorImages.setFragment(this);
         sectionDescriptor.addRow(rowDescriptorImages);
 
         sectionDescriptor.addRow( RowDescriptor.newInstance("detail", RowDescriptor.FormRowDescriptorTypeTextInline, "Title",new Value<String>("Detail")) );
@@ -211,7 +209,7 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
         sectionDescriptor4.addRow(timeDialogDisabled);
 
         mFormManager = new FormManager();
-        mFormManager.setup(descriptor, mListView, getActivity());
+        mFormManager.setup(descriptor, mListView, this);
         mFormManager.setOnFormRowClickListener(this);
         mFormManager.setOnFormRowValueChangedListener(this);
 

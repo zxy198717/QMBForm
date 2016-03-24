@@ -1,5 +1,6 @@
 package com.quemb.qmbform.view;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -151,7 +152,13 @@ public abstract class Cell extends LinearLayout {
 
     protected void startActivityForResult(Intent intent, int requestCode) {
         mWaitingActivityResult = true;
-        mFormItemDescriptor.getFragment().startActivityForResult(intent, requestCode);
+        if (mFormItemDescriptor.getFragment() != null) {
+            mFormItemDescriptor.getFragment().startActivityForResult(intent, requestCode);
+        } else {
+            if (getContext() instanceof Activity) {
+                ((Activity)getContext()).startActivityForResult(intent, requestCode);
+            }
+        }
     }
 
     protected void setWaitingActivityResult(boolean mWaitingActivityResult) {

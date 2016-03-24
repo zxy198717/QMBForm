@@ -1,5 +1,6 @@
 package com.quemb.qmbform.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -37,7 +38,11 @@ public class FormImageFieldCell extends FormTitleFieldCell {
     protected void init() {
         super.init();
         imageView = (ImageView) findViewById(R.id.imageView);
-        mImagePickerManager = new ImagePickerManager(getRowDescriptor().getFragment());
+        if(getRowDescriptor().getFragment() != null) {
+            mImagePickerManager = new ImagePickerManager(getRowDescriptor().getFragment());
+        } else {
+            mImagePickerManager = new ImagePickerManager((Activity)getContext());
+        }
     }
 
     @Override

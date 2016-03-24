@@ -13,6 +13,7 @@ import com.quemb.qmbform.view.Cell;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,6 +28,7 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
 
     private FormDescriptor mFormDescriptor;
     protected ListView mListView;
+    private FormAdapter adapter;
     protected OnFormRowClickListener mOnFormRowClickListener;
     private OnFormRowChangeListener mOnFormRowChangeListener;
     private OnFormRowValueChangedListener mOnFormRowValueChangedListener;
@@ -35,6 +37,10 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
 
     }
 
+    public void setup(FormDescriptor formDescriptor, final ListView listView, Fragment fragment) {
+        setup(formDescriptor, listView, fragment.getActivity());
+        adapter.setFragment(fragment);
+    }
 
     public void setup(FormDescriptor formDescriptor, final ListView listView, Activity activity) {
 
@@ -45,7 +51,7 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
         mFormDescriptor.setOnFormRowChangeListener(this);
         mFormDescriptor.setOnFormRowValueChangedListener(this);
 
-        final FormAdapter adapter = FormAdapter.newInstance(mFormDescriptor, context);
+        adapter = FormAdapter.newInstance(mFormDescriptor, context);
         listView.setAdapter(adapter);
         listView.setDividerHeight(1);
         listView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);

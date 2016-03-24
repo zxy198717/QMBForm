@@ -9,6 +9,7 @@ import com.quemb.qmbform.view.Cell;
 import com.quemb.qmbform.view.FormImageFieldCell;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -25,6 +26,7 @@ public class FormAdapter extends BaseAdapter {
     private FormDescriptor mFormDescriptor;
     private ArrayList<FormItemDescriptor> mItems;
     private Context mContext;
+    private Fragment mFragment;
     private Boolean mEnableSectionSeperator;
 
     public static FormAdapter newInstance(FormDescriptor formDescriptor, Context context) {
@@ -77,11 +79,15 @@ public class FormAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         FormItemDescriptor rowDescriptor = getItem(position);
+        rowDescriptor.setFragment(mFragment);
         Cell cell = CellViewFactory.getInstance().createViewForFormItemDescriptor(mContext, getItem(position));
 
         return cell;
     }
 
+    public void setFragment(Fragment mFragment) {
+        this.mFragment = mFragment;
+    }
 
     public Boolean getEnableSectionSeperator() {
         return mEnableSectionSeperator;

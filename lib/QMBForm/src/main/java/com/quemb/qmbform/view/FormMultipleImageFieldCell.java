@@ -49,7 +49,11 @@ public class FormMultipleImageFieldCell extends FormTitleFieldCell {
     protected void init() {
         super.init();
         imageItems = new ArrayList<>();
-        mImagePickerManager = new ImagePickerManager(getRowDescriptor().getFragment());
+        if(getRowDescriptor().getFragment() != null) {
+            mImagePickerManager = new ImagePickerManager(getRowDescriptor().getFragment());
+        } else {
+            mImagePickerManager = new ImagePickerManager((Activity)getContext());
+        }
 
         gridView = (GridView) findViewById(R.id.gridView);
         gridView.setAdapter(imageGridAdapter = new ImageGridAdapter());
