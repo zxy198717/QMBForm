@@ -54,7 +54,7 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FormItemDescriptor itemDescriptor = (FormItemDescriptor)parent.getAdapter().getItem(position);
 
-                Cell cell = itemDescriptor.getCell();
+                Cell cell = (Cell) view;
                 if (cell != null && itemDescriptor instanceof RowDescriptor) {
                     RowDescriptor rowDescriptor = (RowDescriptor) itemDescriptor;
                     if (!rowDescriptor.getDisabled()) {

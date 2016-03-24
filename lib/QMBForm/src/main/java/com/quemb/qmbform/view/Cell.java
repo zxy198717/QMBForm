@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 /**
  * Created by tonimoeckel on 14.07.14.
@@ -168,6 +169,15 @@ public abstract class Cell extends LinearLayout {
 
     protected void activityResult(int requestCode, int resultCode, Intent data){
 
+    }
+
+    protected void showToast(final String message) {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

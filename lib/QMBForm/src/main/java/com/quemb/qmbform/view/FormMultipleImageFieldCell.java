@@ -1,5 +1,6 @@
 package com.quemb.qmbform.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.kbeanie.imagechooser.api.ChosenImage;
@@ -26,16 +26,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.years.imagepicker.ImagePickerManager;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 /**
  * Created by Years.im on 16/3/19.
  */
 public class FormMultipleImageFieldCell extends FormTitleFieldCell {
 
+    private static final int REQUEST_IMAGE = 123;
     GridView gridView;
     ArrayList<ImageItem> imageItems;
     ImageGridAdapter imageGridAdapter;
     private int max = 3;
+    private boolean multipleImagesPicker;
     private ImagePickerManager mImagePickerManager;
 
     public FormMultipleImageFieldCell(Context context, RowDescriptor rowDescriptor) {
@@ -55,8 +58,8 @@ public class FormMultipleImageFieldCell extends FormTitleFieldCell {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == imageItems.size()) {
-                    if(imageItems.size() >= max) {
-                        Toast.makeText(getContext(), "最多可选择"+max+"张图片", Toast.LENGTH_SHORT).show();
+                    if (imageItems.size() >= max) {
+                        showToast("最多可选择" + max + "张图片");
                     } else {
                         onAddClick();
                     }
@@ -80,8 +83,34 @@ public class FormMultipleImageFieldCell extends FormTitleFieldCell {
         return R.layout.multiple_image_field_cell;
     }
 
+    protected void multipleImagesPicker() {
+        Intent intent = new Intent(getContext(), MultiImageSelectorActivity.class);
+        // whether show camera
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
+        // max select image amount
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, max - imageItems.size());
+        // select mode (MultiImageSelectorActivity.MODE_SINGLE OR MultiImageSelectorActivity.MODE_MULTI)
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
+        // default select images (support array list)
+        ArrayList<String> paths = new ArrayList<>();
+        for (ImageItem imageItem: imageItems) {
+            if (!imageItem.getPath().startsWith("http")) {
+                paths.add(imageItem.getPath());
+            }
+        }
+        intent.putStringArrayListExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, paths);
+        startActivityForResult(intent, REQUEST_IMAGE);
+    }
+
     protected void onAddClick() {
-        setWaitingActivityResult(true);
+
+        if(multipleImagesPicker) {
+            multipleImagesPicker();
+            return;
+        }
+
+        this.setWaitingActivityResult(true);
+
         mImagePickerManager.pickImage(false, new ImagePickerManager.ImagePickerListener() {
             @Override
             public void onImageChosen(final ChosenImage image) {
@@ -91,20 +120,17 @@ public class FormMultipleImageFieldCell extends FormTitleFieldCell {
                 gridView.post(new Runnable() {
                     @Override
                     public void run() {
-                        ImageItem imageItem = new ImageItem();
-                        imageItem.setPath(image.getFileThumbnail());
+                        ImageItem imageItem = new ImageItem(image.getFileThumbnail());
                         imageItems.add(imageItem);
                         onValueChanged(new Value<List<ImageItem>>(imageItems));
                         imageGridAdapter.notifyDataSetChanged();
                     }
                 });
-                setWaitingActivityResult(false);
-
             }
 
             @Override
             public void onError(String reason) {
-                setWaitingActivityResult(false);
+                showToast(reason);
             }
         });
     }
@@ -136,8 +162,13 @@ public class FormMultipleImageFieldCell extends FormTitleFieldCell {
     protected void update() {
         super.update();
 
-        if (getFormItemDescriptor().getCellConfig() != null && getFormItemDescriptor().getCellConfig().containsKey("max")) {
-            max = Integer.valueOf(getFormItemDescriptor().getCellConfig().get("max").toString());
+        if (getFormItemDescriptor().getCellConfig() != null) {
+            if(getFormItemDescriptor().getCellConfig().containsKey("max")) {
+                max = Integer.valueOf(getFormItemDescriptor().getCellConfig().get("max").toString());
+            }
+            if(getFormItemDescriptor().getCellConfig().containsKey("multipleImagesPicker")) {
+                multipleImagesPicker = (Boolean) getFormItemDescriptor().getCellConfig().get("multipleImagesPicker");
+            }
         }
 
         Value<List<ImageItem>> value = getRowDescriptor().getValue();
@@ -151,14 +182,38 @@ public class FormMultipleImageFieldCell extends FormTitleFieldCell {
     @Override
     protected void activityResult(int requestCode, int resultCode, Intent data) {
         mImagePickerManager.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_IMAGE){
+            if(resultCode == Activity.RESULT_OK){
+                List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                for (String path : paths) {
+                    if(!findImage(path)) {
+                        imageItems.add(new ImageItem(path));
+                    }
+                }
+                onValueChanged(new Value<List<ImageItem>>(imageItems));
+                imageGridAdapter.notifyDataSetChanged();
+            }
+        }
+
         super.activityResult(requestCode, resultCode, data);
+    }
+
+    private boolean findImage(String path) {
+        for (ImageItem imageItem: imageItems) {
+            if (imageItem.getPath().equals(path)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     class ImageGridAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return imageItems.size() + 1;
+            return max <= imageItems.size() ? imageItems.size(): imageItems.size() + 1;
         }
 
         @Override
@@ -174,7 +229,7 @@ public class FormMultipleImageFieldCell extends FormTitleFieldCell {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             SquareImageView imageView = new SquareImageView(getContext());
-            if (position == getCount() - 1) {
+            if (position >= imageItems.size()) {
                 imageView.setImageResource(R.drawable.ic_action_new);
                 imageView.setScaleType(ImageView.ScaleType.CENTER);
             } else {
