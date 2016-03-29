@@ -21,6 +21,7 @@ import com.quemb.qmbform.descriptor.DataSource;
 import com.quemb.qmbform.descriptor.DataSourceListener;
 import com.quemb.qmbform.descriptor.FormDescriptor;
 import com.quemb.qmbform.descriptor.FormItemDescriptor;
+import com.quemb.qmbform.descriptor.FormOptionsObject;
 import com.quemb.qmbform.descriptor.OnFormRowValueChangedListener;
 import com.quemb.qmbform.descriptor.RowDescriptor;
 import com.quemb.qmbform.descriptor.SectionDescriptor;
@@ -95,6 +96,13 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
         Intent intent = new Intent(getActivity(), ContentSelectActivity.class);
         config.put(FormSelectorPushFieldCell.PUSH_INTENT, intent);
         rowDescriptor.setCellConfig(config);
+        sectionDescriptor.addRow(rowDescriptor);
+
+        rowDescriptor = RowDescriptor.newInstance("segmented", RowDescriptor.FormRowDescriptorTypeSelectorSegmentedControlInline, "SegmentedControl", new Value<String>("false"));
+        ArrayList<FormOptionsObject> objects = new ArrayList<>();
+        objects.add(FormOptionsObject.createFormOptionsObject("true", "Agree"));
+        objects.add(FormOptionsObject.createFormOptionsObject("false", "Not Agree"));
+        rowDescriptor.setSelectorOptions(objects);
         sectionDescriptor.addRow(rowDescriptor);
 
         sectionDescriptor.addRow( RowDescriptor.newInstance("detail", RowDescriptor.FormRowDescriptorTypeTextInline, "Title",new Value<String>("Detail")) );

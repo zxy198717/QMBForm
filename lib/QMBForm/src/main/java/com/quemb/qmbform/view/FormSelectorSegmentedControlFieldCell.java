@@ -21,7 +21,7 @@ import info.hoang8f.android.segmented.SegmentedGroup;
  * Created by pmaccamp on 9/8/2015.
  */
 public class FormSelectorSegmentedControlFieldCell extends FormBaseCell {
-    private SegmentedGroup mSegmentedGroup;
+    private RadioGroup mSegmentedGroup;
     private TextView mTextView;
     private ArrayList<Object> mValues;
 
@@ -33,7 +33,7 @@ public class FormSelectorSegmentedControlFieldCell extends FormBaseCell {
     protected void init() {
         super.init();
         mValues = new ArrayList<Object>();
-        mSegmentedGroup = (SegmentedGroup) findViewById(R.id.segmentedGroup);
+        mSegmentedGroup = (RadioGroup) findViewById(R.id.segmentedGroup);
         mTextView = (TextView) findViewById(R.id.textView);
         mTextView.setTextColor(R.attr.editTextColor);
         mTextView.setTextAppearance(getContext(), R.style.Base_TextAppearance_AppCompat_Body2);
@@ -68,19 +68,23 @@ public class FormSelectorSegmentedControlFieldCell extends FormBaseCell {
         });
     }
 
-    private void addButton(SegmentedGroup group, int id, String displayText, boolean checked) {
-        RadioButton radioButton = new RadioButton(getContext(), null, R.style.RadioButton);
-        radioButton.setLayoutParams(new SegmentedGroup.LayoutParams(0,
+    private void addButton(RadioGroup group, int id, String displayText, boolean checked) {
+
+        RadioButton radioButton = new RadioButton(getContext(), null, group instanceof SegmentedGroup ? R.style.RadioButton : R.attr.radioButtonStyle);
+        radioButton.setLayoutParams(new RadioGroup.LayoutParams(0,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 1));
         radioButton.setText(displayText);
         radioButton.setId(id);
-        radioButton.setGravity(Gravity.CENTER_HORIZONTAL);
         radioButton.setClickable(true);
         radioButton.setChecked(checked);
-        int padding = getResources().getDimensionPixelOffset(R.dimen.cell_padding);
-        radioButton.setPadding(padding, padding, padding, padding);
         group.addView(radioButton);
-        group.updateBackground();
+
+        if (group instanceof SegmentedGroup) {
+            radioButton.setGravity(Gravity.CENTER_HORIZONTAL);
+            int padding = getResources().getDimensionPixelOffset(R.dimen.cell_padding);
+            radioButton.setPadding(padding, padding, padding, padding);
+            ((SegmentedGroup) group).updateBackground();
+        }
     }
 }
