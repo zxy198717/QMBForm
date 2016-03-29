@@ -36,6 +36,7 @@ import com.quemb.qmbform.view.FormIntegerSliderFieldCell;
 import com.quemb.qmbform.view.FormMultipleImageFieldCell;
 import com.quemb.qmbform.view.FormPickerDialogFieldCell;
 import com.quemb.qmbform.view.FormPickerDialogVerticalFieldCell;
+import com.quemb.qmbform.view.FormSelectorPushFieldCell;
 import com.quemb.qmbform.view.FormSelectorSegmentedControlFieldCell;
 import com.quemb.qmbform.view.FormSelectorSegmentedControlInlineFieldCell;
 import com.quemb.qmbform.view.FormSpinnerFieldCell;
@@ -112,6 +113,7 @@ public class CellViewFactory {
         mViewRowTypeMap.put(RowDescriptor.FormRowDescriptorTypeSelectorSpinnerInline, FormSpinnerInlineFieldCell.class);
         mViewRowTypeMap.put(RowDescriptor.FormRowDescriptorTypeSelectorPickerDialog, FormPickerDialogFieldCell.class);
         mViewRowTypeMap.put(RowDescriptor.FormRowDescriptorTypeSelectorPickerDialogVertical, FormPickerDialogVerticalFieldCell.class);
+        mViewRowTypeMap.put(RowDescriptor.FormRowDescriptorTypeSelectorPush, FormSelectorPushFieldCell.class);
         mViewRowTypeMap.put(RowDescriptor.FormRowDescriptorTypeIntegerSlider, FormIntegerSliderFieldCell.class);
         mViewRowTypeMap.put(RowDescriptor.FormRowDescriptorTypeExternal, FormExternalButtonFieldCell.class);
         mViewRowTypeMap.put(RowDescriptor.FormRowDescriptorTypeHTMLText, FormEditHTMLTextViewFieldCell.class);

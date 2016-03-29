@@ -26,10 +26,13 @@ import com.quemb.qmbform.descriptor.RowDescriptor;
 import com.quemb.qmbform.descriptor.SectionDescriptor;
 import com.quemb.qmbform.descriptor.Value;
 import com.quemb.qmbform.sample.R;
+import com.quemb.qmbform.sample.model.MockContent;
+import com.quemb.qmbform.view.FormSelectorPushFieldCell;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by tonimoeckel on 17.07.14.
@@ -86,6 +89,13 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
 
         RowDescriptor rowDescriptorImages = RowDescriptor.newInstance("images", RowDescriptor.FormRowDescriptorTypeMultipleImage, "Images");
         sectionDescriptor.addRow(rowDescriptorImages);
+
+        rowDescriptor = RowDescriptor.newInstance("content", RowDescriptor.FormRowDescriptorTypeSelectorPush, "PushSelector", new Value<List<MockContent>>(new ArrayList<MockContent>()));
+        HashMap<String, Object> config = new HashMap<>();
+        Intent intent = new Intent(getActivity(), ContentSelectActivity.class);
+        config.put(FormSelectorPushFieldCell.PUSH_INTENT, intent);
+        rowDescriptor.setCellConfig(config);
+        sectionDescriptor.addRow(rowDescriptor);
 
         sectionDescriptor.addRow( RowDescriptor.newInstance("detail", RowDescriptor.FormRowDescriptorTypeTextInline, "Title",new Value<String>("Detail")) );
         sectionDescriptor.addRow( RowDescriptor.newInstance("detail", RowDescriptor.FormRowDescriptorTypeText, "Title",new Value<String>("Detail")) );

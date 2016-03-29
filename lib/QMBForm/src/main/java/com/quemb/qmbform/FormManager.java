@@ -162,7 +162,7 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         for (int i=mListView.getFirstVisiblePosition();i<=mListView.getLastVisiblePosition();i++) {
             Cell cell = (Cell)mListView.getChildAt(i);
-            if(cell.isWaitingActivityResult()) {
+            if(cell != null && cell.isWaitingActivityResult()) {
                 cell.onActivityResult(requestCode, resultCode, data);
             }
         }
