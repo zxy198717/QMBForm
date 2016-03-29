@@ -26,7 +26,6 @@ public class FormTitleFieldCell extends FormBaseCell {
         getContext().getTheme().resolveAttribute(R.attr.editTextColor, typedValue, true);
         final int color = typedValue.data;
         mTextView.setTextColor(color);
-        mTextView.setTextAppearance(getContext(), R.style.Base_TextAppearance_AppCompat_Body2);
     }
 
     @Override
