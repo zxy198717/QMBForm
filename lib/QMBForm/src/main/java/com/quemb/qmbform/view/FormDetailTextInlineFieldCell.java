@@ -8,6 +8,7 @@ import android.content.Context;
 import android.widget.TextView;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,7 +48,7 @@ public class FormDetailTextInlineFieldCell extends FormTitleFieldCell {
         if (value != null && value.getValue() != null) {
             if (value.getValue() instanceof String) {
                 getDetailTextView().setText((String) value.getValue());
-            } else if(value.getValue() instanceof List) {
+            } else if(value.getValue() instanceof ArrayList) {
                 List<Object> objects = (List<Object>) value.getValue();
                 String valueStr = "";
                 int index = 0;
