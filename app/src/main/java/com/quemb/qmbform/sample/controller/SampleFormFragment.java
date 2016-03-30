@@ -26,6 +26,7 @@ import com.quemb.qmbform.descriptor.OnFormRowValueChangedListener;
 import com.quemb.qmbform.descriptor.RowDescriptor;
 import com.quemb.qmbform.descriptor.SectionDescriptor;
 import com.quemb.qmbform.descriptor.Value;
+import com.quemb.qmbform.pojo.ProcessedFile;
 import com.quemb.qmbform.sample.R;
 import com.quemb.qmbform.sample.model.MockContent;
 import com.quemb.qmbform.view.FormSelectorPushFieldCell;
@@ -104,6 +105,12 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
         objects.add(FormOptionsObject.createFormOptionsObject("false", "Not Agree"));
         rowDescriptor.setSelectorOptions(objects);
         sectionDescriptor.addRow(rowDescriptor);
+
+        RowDescriptor rowDescriptorFiles = RowDescriptor.newInstance("files", RowDescriptor.FormRowDescriptorTypeMultipleFile, "Files");
+        sectionDescriptor.addRow(rowDescriptorFiles);
+
+        RowDescriptor rowDescriptorUploadImages = RowDescriptor.newInstance("uploadimages", RowDescriptor.FormRowDescriptorTypeMultipleProcessedImage, "Upload Images");
+        sectionDescriptor.addRow(rowDescriptorUploadImages);
 
         sectionDescriptor.addRow( RowDescriptor.newInstance("detail", RowDescriptor.FormRowDescriptorTypeTextInline, "Title",new Value<String>("Detail")) );
         sectionDescriptor.addRow( RowDescriptor.newInstance("detail", RowDescriptor.FormRowDescriptorTypeText, "Title",new Value<String>("Detail")) );
@@ -272,7 +279,35 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
         mChangesMap.put(rowDescriptor.getTag(), newValue);
         updateSaveItem();
 
+        if ("files".equals(rowDescriptor.getTag()) || "uploadimages".equals(rowDescriptor.getTag())) {
+            ArrayList<ProcessedFile> processedFiles = (ArrayList<ProcessedFile>) newValue.getValue();
+            for (ProcessedFile file: processedFiles) {
+                uploadFile(file);
+            }
+        }
+    }
 
+    private void uploadFile(final ProcessedFile processedFile) {
+        if (processedFile.getProcessedStatus() != ProcessedFile.ProcessedStatus.READY) {
+            return;
+        }
+        processedFile.setProcessedStatus(ProcessedFile.ProcessedStatus.UPLOADING);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i<= 100; i ++) {
+                    try {
+                        Thread.sleep(500);
+                        processedFile.setCurrentPercent(i);
+                        if(i == 100) {
+                            processedFile.setProcessedStatus(ProcessedFile.ProcessedStatus.SUCCESS);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     @Override
