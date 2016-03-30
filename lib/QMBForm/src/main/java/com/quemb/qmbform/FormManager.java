@@ -160,6 +160,16 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        for(SectionDescriptor sectionDescriptor: mFormDescriptor.getSections()) {
+            for (RowDescriptor rowDescriptor: sectionDescriptor.getRows()) {
+                Cell cell = rowDescriptor.getCell();
+                if(cell != null && cell.isWaitingActivityResult()) {
+                    cell.onActivityResult(requestCode, resultCode, data);
+                }
+            }
+        }
+        /*
         for (int i=mListView.getFirstVisiblePosition();i<=mListView.getLastVisiblePosition();i++) {
             View v = mListView.getChildAt(i);
             if (v instanceof Cell) {
@@ -170,6 +180,7 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
             }
 
         }
+        */
     }
 }
 
