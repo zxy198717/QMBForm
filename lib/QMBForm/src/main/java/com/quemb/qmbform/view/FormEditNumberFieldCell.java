@@ -33,6 +33,11 @@ public class FormEditNumberFieldCell extends FormEditTextFieldCell {
     @Override
     protected void updateEditView() {
 
+        String hint = getRowDescriptor().getHint(getContext());
+        if (hint != null) {
+            getEditView().setHint(hint);
+        }
+
         Value<Number> value = (Value<Number>) getRowDescriptor().getValue();
         if (value != null) {
             String valueString = String.valueOf(value.getValue());

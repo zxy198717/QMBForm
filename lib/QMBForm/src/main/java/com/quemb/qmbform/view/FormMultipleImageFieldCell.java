@@ -233,9 +233,10 @@ public class FormMultipleImageFieldCell extends FormTitleFieldCell {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             SquareImageView imageView = new SquareImageView(getContext());
+
             if (position >= imageItems.size()) {
-                imageView.setImageResource(R.drawable.ic_action_new);
-                imageView.setScaleType(ImageView.ScaleType.CENTER);
+                imageView.setImageResource(R.drawable.image_button_upload);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             } else {
                 Glide.with(getContext()).load(getItem(position).getPath()).into(imageView);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

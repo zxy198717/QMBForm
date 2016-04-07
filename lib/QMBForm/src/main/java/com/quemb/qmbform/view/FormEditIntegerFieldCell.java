@@ -34,6 +34,10 @@ public class FormEditIntegerFieldCell extends FormEditTextFieldCell {
 
     @Override
     protected void updateEditView() {
+        String hint = getRowDescriptor().getHint(getContext());
+        if (hint != null) {
+            getEditView().setHint(hint);
+        }
 
         Value<Integer> value = (Value<Integer>) getRowDescriptor().getValue();
         if (value != null) {

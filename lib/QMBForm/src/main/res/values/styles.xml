@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ImageAddIcon">
+        <item name="android:src">@drawable/ic_action_new</item>
+        <item name="android:scaleType">center</item>
+        <item name="ImageAddIconRes">@drawable/ic_action_new</item>
+    </style>
+
+    <attr format="reference" name="ImageAddIconRes"/>
+</resources>

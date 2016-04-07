@@ -197,8 +197,8 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
                 }
             });
             if (position >= imageItems.size()) {
-                imageView.setImageResource(R.drawable.ic_action_new);
-                imageView.setScaleType(ImageView.ScaleType.CENTER);
+                imageView.setImageResource(R.drawable.image_button_upload);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             } else {
 
                 ProcessedFile processedFile = getItem(position);
