@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.support.annotation.LayoutRes;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -62,9 +63,12 @@ public abstract class Cell extends LinearLayout {
         setOrientation(LinearLayout.VERTICAL);
         setGravity(Gravity.CENTER);
 
-        int resource = mFormItemDescriptor.getResourceId() > 0 ? mFormItemDescriptor.getResourceId() : getResource();
+        @LayoutRes int resource = mFormItemDescriptor.getResourceId() > 0 ? mFormItemDescriptor.getResourceId() : getResource();
         if (resource > 0) {
-            inflate(getContext(), resource, getSuperViewForLayoutInflation());
+            View v = inflate(getContext(), resource, getSuperViewForLayoutInflation());
+            if(null != v.getBackground()) {
+                setBackgroundDrawable(v.getBackground());
+            }
         }
 
         if (shouldAddDivider()) {
