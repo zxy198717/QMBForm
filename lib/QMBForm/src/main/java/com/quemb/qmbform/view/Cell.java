@@ -66,10 +66,9 @@ public abstract class Cell extends LinearLayout {
         @LayoutRes int resource = mFormItemDescriptor.getResourceId() > 0 ? mFormItemDescriptor.getResourceId() : getResource();
         if (resource > 0) {
             inflate(getContext(), resource, getSuperViewForLayoutInflation());
-            if(getChildAt(0).getBackground() != null) {
-                setBackgroundDrawable(getChildAt(0).getBackground());
-            }
         }
+
+        setBackgroundColor(getResources().getColor(R.color.form_cell_background));
 
         if (shouldAddDivider()) {
             addView(getDividerView());
