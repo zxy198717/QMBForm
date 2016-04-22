@@ -2,7 +2,9 @@ package com.quemb.qmbform.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,7 @@ import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
 
     private static final int REQUEST_IMAGE = 124;
+    public static final String MAX_COUNT = "MAX_COUNT";
 
     GridView gridView;
     ArrayList<ProcessedFile> imageItems;
@@ -80,8 +83,8 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
         super.update();
 
         if (getFormItemDescriptor().getCellConfig() != null) {
-            if(getFormItemDescriptor().getCellConfig().containsKey("max")) {
-                max = Integer.valueOf(getFormItemDescriptor().getCellConfig().get("max").toString());
+            if(getFormItemDescriptor().getCellConfig().containsKey(MAX_COUNT)) {
+                max = Integer.valueOf(getFormItemDescriptor().getCellConfig().get(MAX_COUNT).toString());
             }
         }
 
@@ -95,6 +98,16 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
         }
 
         gridView.setAdapter(imageGridAdapter = new ImageGridAdapter());
+
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position < imageItems.size()) {
+                    confirmDialog(position);
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -141,6 +154,29 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
         }
 
         return false;
+    }
+
+    private void confirmDialog(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder
+                .setMessage("删除该图片?")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        imageItems.remove(position);
+                        onValueChanged(new Value<List<ProcessedFile>>(imageItems));
+                        imageGridAdapter.notifyDataSetChanged();
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
 
     @Override

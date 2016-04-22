@@ -40,7 +40,7 @@ public class FormEditIntegerFieldCell extends FormEditTextFieldCell {
         }
 
         Value<Integer> value = (Value<Integer>) getRowDescriptor().getValue();
-        if (value != null) {
+        if (value != null && value.getValue() !=null) {
             String valueString = String.valueOf(value.getValue());
             getEditView().setText(valueString);
         }

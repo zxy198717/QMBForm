@@ -4,12 +4,13 @@
     android:layout_height="match_parent"
     tools:context=".SampleActivity">
 
-	<ListView
-			android:id="@+id/list"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:divider="@null"
-			android:dividerHeight="0dp"
-			android:descendantFocusability="beforeDescendants" />
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/redColor"
+        android:descendantFocusability="beforeDescendants"
+        android:divider="@color/form_cell_background"
+        android:dividerHeight="0dp" />
 
 </RelativeLayout>
