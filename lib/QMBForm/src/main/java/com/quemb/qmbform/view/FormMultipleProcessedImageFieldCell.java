@@ -102,6 +102,9 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (getRowDescriptor().getDisabled()) {
+                    return false;
+                }
                 if (position < imageItems.size()) {
                     confirmDialog(position);
                 }
@@ -201,6 +204,9 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
 
         @Override
         public int getCount() {
+            if (getRowDescriptor().getDisabled()) {
+                return imageItems.size();
+            }
             return max <= imageItems.size() ? imageItems.size(): imageItems.size() + 1;
         }
 

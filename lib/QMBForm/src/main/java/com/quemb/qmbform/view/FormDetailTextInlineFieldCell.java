@@ -43,6 +43,10 @@ public class FormDetailTextInlineFieldCell extends FormTitleFieldCell {
             getDetailTextView().setHint(getRowDescriptor().getHint(getContext()));
         }
 
+        if (getRowDescriptor().getDisabled()) {
+            getDetailTextView().setMaxLines(2000);
+        }
+
         Value<?> value = getRowDescriptor().getValue();
         if (value != null && value.getValue() != null) {
             if (value.getValue() instanceof String) {
