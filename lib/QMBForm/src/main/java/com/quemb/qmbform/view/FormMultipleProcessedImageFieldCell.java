@@ -38,7 +38,7 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
     GridView gridView;
     ArrayList<ProcessedFile> imageItems;
     ImageGridAdapter imageGridAdapter;
-    private int max = 3;
+    private int max;
 
     TimerTask task = new TimerTask() {
         public void run() {
@@ -86,6 +86,10 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
             if(getFormItemDescriptor().getCellConfig().containsKey(MAX_COUNT)) {
                 max = Integer.valueOf(getFormItemDescriptor().getCellConfig().get(MAX_COUNT).toString());
             }
+        }
+
+        if (max <= 0) {
+            max = 3;
         }
 
         Value<List<ProcessedFile>> value = getRowDescriptor().getValue();

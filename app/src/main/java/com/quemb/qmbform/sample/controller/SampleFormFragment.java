@@ -29,6 +29,7 @@ import com.quemb.qmbform.descriptor.Value;
 import com.quemb.qmbform.pojo.ProcessedFile;
 import com.quemb.qmbform.sample.R;
 import com.quemb.qmbform.sample.model.MockContent;
+import com.quemb.qmbform.view.FormMultipleProcessedImageFieldCell;
 import com.quemb.qmbform.view.FormSelectorPushFieldCell;
 
 import java.util.ArrayList;
@@ -110,6 +111,9 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
         sectionDescriptor.addRow(rowDescriptorFiles);
 
         RowDescriptor rowDescriptorUploadImages = RowDescriptor.newInstance("uploadimages", RowDescriptor.FormRowDescriptorTypeMultipleProcessedImage, "Upload Images");
+        config = new HashMap<>();
+        config.put(FormMultipleProcessedImageFieldCell.MAX_COUNT, 9);
+        rowDescriptorUploadImages.setCellConfig(config);
         sectionDescriptor.addRow(rowDescriptorUploadImages);
 
         sectionDescriptor.addRow( RowDescriptor.newInstance("detail", RowDescriptor.FormRowDescriptorTypeTextInline, "Title",new Value<String>("Detail")) );
