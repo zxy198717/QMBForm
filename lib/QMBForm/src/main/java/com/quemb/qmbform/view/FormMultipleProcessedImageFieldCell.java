@@ -83,7 +83,7 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
         super.update();
 
         if (getFormItemDescriptor().getCellConfig() != null) {
-            if(getFormItemDescriptor().getCellConfig().containsKey(MAX_COUNT)) {
+            if (getFormItemDescriptor().getCellConfig().containsKey(MAX_COUNT)) {
                 max = Integer.valueOf(getFormItemDescriptor().getCellConfig().get(MAX_COUNT).toString());
             }
         }
@@ -97,7 +97,7 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
             imageItems = (ArrayList<ProcessedFile>) value.getValue();
         }
 
-        if(imageItems == null) {
+        if (imageItems == null) {
             imageItems = new ArrayList<>();
         }
 
@@ -139,12 +139,12 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
         // whether show camera
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
         // max select image amount
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, max);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, max - uploadedImageCount());
         // select mode (MultiImageSelectorActivity.MODE_SINGLE OR MultiImageSelectorActivity.MODE_MULTI)
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
         // default select images (support array list)
         ArrayList<String> paths = new ArrayList<>();
-        for (ProcessedFile imageItem: imageItems) {
+        for (ProcessedFile imageItem : imageItems) {
             if (!imageItem.getPath().startsWith("http")) {
                 paths.add(imageItem.getPath());
             }
@@ -153,8 +153,18 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
         startActivityForResult(intent, REQUEST_IMAGE);
     }
 
+    private int uploadedImageCount() {
+        int count = 0;
+        for (ProcessedFile imageItem : imageItems) {
+            if (imageItem.getPath().startsWith("http")) {
+                count ++;
+            }
+        }
+        return count;
+    }
+
     private boolean findImage(String path) {
-        for (ProcessedFile imageItem: imageItems) {
+        for (ProcessedFile imageItem : imageItems) {
             if (imageItem.getPath().equals(path)) {
                 return true;
             }
@@ -188,11 +198,11 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_IMAGE){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == REQUEST_IMAGE) {
+            if (resultCode == Activity.RESULT_OK) {
                 List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                 for (String path : paths) {
-                    if(!findImage(path)) {
+                    if (!findImage(path)) {
                         imageItems.add(new ProcessedFile(path));
                     }
                 }
@@ -211,7 +221,7 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
             if (getRowDescriptor().getDisabled()) {
                 return imageItems.size();
             }
-            return max <= imageItems.size() ? imageItems.size(): imageItems.size() + 1;
+            return max <= imageItems.size() ? imageItems.size() : imageItems.size() + 1;
         }
 
         @Override
@@ -228,9 +238,9 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.multiple_image_field_grid_item, null);
 
-            ImageView imageView = (ImageView)convertView.findViewById(R.id.imageView);
-            CircleProgress circleProgress = (CircleProgress)convertView.findViewById(R.id.circleProgress);
-            ImageButton deleteButton = (ImageButton)convertView.findViewById(R.id.deleteButton);
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
+            CircleProgress circleProgress = (CircleProgress) convertView.findViewById(R.id.circleProgress);
+            ImageButton deleteButton = (ImageButton) convertView.findViewById(R.id.deleteButton);
             circleProgress.setVisibility(GONE);
             deleteButton.setVisibility(GONE);
             deleteButton.setOnClickListener(new OnClickListener() {
@@ -251,9 +261,9 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
 
                 if (processedFile.getProcessedStatus() != ProcessedFile.ProcessedStatus.READY) {
                     circleProgress.setVisibility(VISIBLE);
-                    circleProgress.setProgress( (int)(processedFile.getCurrentPercent()));
+                    circleProgress.setProgress((int) (processedFile.getCurrentPercent()));
                 }
-                if(processedFile.getProcessedStatus() == ProcessedFile.ProcessedStatus.FAIL || processedFile.getProcessedStatus() == ProcessedFile.ProcessedStatus.SUCCESS) {
+                if (processedFile.getProcessedStatus() == ProcessedFile.ProcessedStatus.FAIL || processedFile.getProcessedStatus() == ProcessedFile.ProcessedStatus.SUCCESS) {
                     deleteButton.setVisibility(VISIBLE);
                 }
 
