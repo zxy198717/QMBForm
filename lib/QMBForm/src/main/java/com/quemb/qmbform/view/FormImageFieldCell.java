@@ -8,7 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.kbeanie.imagechooser.api.ChosenImage;
+import com.kbeanie.multipicker.api.entity.ChosenImage;
 import com.quemb.qmbform.R;
 import com.quemb.qmbform.descriptor.RowDescriptor;
 import com.quemb.qmbform.descriptor.Value;
@@ -70,9 +70,10 @@ public class FormImageFieldCell extends FormTitleFieldCell {
                 imageView.post(new Runnable() {
                     @Override
                     public void run() {
-                        Glide.with(getContext()).load(image.getFileThumbnailSmall()).into(imageView);
+                        Glide.with(getContext()).load(crop ? image
+                                .getThumbnailSmallPath() : image.getOriginalPath()).into(imageView);
                         onValueChanged(new Value<String>(crop ? image
-                                .getFileThumbnailSmall() : image.getFilePathOriginal()));
+                                .getThumbnailSmallPath() : image.getOriginalPath()));
                     }
                 });
             }

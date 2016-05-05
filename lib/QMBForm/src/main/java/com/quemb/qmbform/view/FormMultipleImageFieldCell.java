@@ -14,7 +14,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.kbeanie.imagechooser.api.ChosenImage;
+import com.kbeanie.multipicker.api.entity.ChosenImage;
 import com.quemb.qmbform.R;
 import com.quemb.qmbform.descriptor.RowDescriptor;
 import com.quemb.qmbform.descriptor.Value;
@@ -120,11 +120,11 @@ public class FormMultipleImageFieldCell extends FormTitleFieldCell {
             public void onImageChosen(final ChosenImage image) {
 
                 final Uri source = Uri.parse(new File(image
-                        .getFileThumbnailSmall()).toString());
+                        .getOriginalPath()).toString());
                 gridView.post(new Runnable() {
                     @Override
                     public void run() {
-                        ImageItem imageItem = new ImageItem(image.getFileThumbnail());
+                        ImageItem imageItem = new ImageItem(image.getOriginalPath());
                         imageItems.add(imageItem);
                         onValueChanged(new Value<List<ImageItem>>(imageItems));
                         imageGridAdapter.notifyDataSetChanged();
