@@ -95,6 +95,10 @@ public abstract class Cell extends LinearLayout {
 
     protected abstract void update();
 
+    public void valueUpdate() {
+        update();
+    }
+
     public FormItemDescriptor getFormItemDescriptor() {
         return mFormItemDescriptor;
     }
