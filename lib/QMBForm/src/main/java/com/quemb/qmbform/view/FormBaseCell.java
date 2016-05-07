@@ -7,12 +7,14 @@ import com.quemb.qmbform.descriptor.RowDescriptor;
 import com.quemb.qmbform.descriptor.SectionDescriptor;
 import com.quemb.qmbform.descriptor.Value;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -84,12 +86,23 @@ public abstract class FormBaseCell extends Cell {
             @Override
             public void onClick(View v) {
 
+                View currentFocus = ((Activity)getContext()).getCurrentFocus();
+                if (currentFocus != null) {
+
+                    if (currentFocus.getParent().getParent() == v.getParent()) {
+                        currentFocus.clearFocus();
+                        InputMethodManager imm = (InputMethodManager)
+                                getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        return;
+                    }
+                }
+
                 RowDescriptor rowDescriptor = getRowDescriptor();
 
                 SectionDescriptor sectionDescriptor = rowDescriptor.getSectionDescriptor();
                 sectionDescriptor.removeRow(rowDescriptor);
                 sectionDescriptor.getFormDescriptor().getOnFormRowValueChangedListener().onValueChanged(rowDescriptor, rowDescriptor.getValue(), null);
-
             }
         });
         linearLayout.addView(deleteButton);
