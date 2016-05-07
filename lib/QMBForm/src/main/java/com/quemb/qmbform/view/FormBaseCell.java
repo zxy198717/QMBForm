@@ -14,6 +14,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -90,11 +91,15 @@ public abstract class FormBaseCell extends Cell {
                 if (currentFocus != null) {
 
                     if (currentFocus.getParent().getParent() == v.getParent()) {
-                        currentFocus.clearFocus();
                         InputMethodManager imm = (InputMethodManager)
                                 getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                        return;
+                        if(imm.isActive(currentFocus))
+                        {
+                            currentFocus.clearFocus();
+                            v.requestFocus();
+                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                            return;
+                        }
                     }
                 }
 
@@ -122,6 +127,22 @@ public abstract class FormBaseCell extends Cell {
         addButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                View currentFocus = ((Activity)getContext()).getCurrentFocus();
+                if (currentFocus != null) {
+
+                    if (currentFocus.getParent().getParent() == v.getParent()) {
+                        InputMethodManager imm = (InputMethodManager)
+                                getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        if(imm.isActive(currentFocus))
+                        {
+                            currentFocus.clearFocus();
+                            v.requestFocus();
+                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                            return;
+                        }
+                    }
+                }
 
                 SectionDescriptor sectionDescriptor = getRowDescriptor().getSectionDescriptor();
                 sectionDescriptor.addRow(RowDescriptor.newInstance(getRowDescriptor()));
