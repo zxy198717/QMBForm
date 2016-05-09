@@ -124,9 +124,9 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
                     if (fragment != null) {
                         try {
                             Class clazz = fragment.getClass();
-                            Method m1 = clazz.getDeclaredMethod("onAddIconLongClick");
+                            Method m1 = clazz.getDeclaredMethod("onAddIconLongClick", RowDescriptor.class);
                             m1.setAccessible(true);
-                            m1.invoke(fragment);
+                            m1.invoke(fragment, getRowDescriptor());
                         } catch (Exception exc) {
                             exc.printStackTrace();
                         }

@@ -254,7 +254,7 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
         mSaveMenuItem = menu.findItem(R.id.action_save);
     }
 
-    protected void onAddIconLongClick() {
+    protected void onAddIconLongClick(RowDescriptor rowDescriptor) {
         Log.e("ddd", "onAddIconLongClick");
     }
 
