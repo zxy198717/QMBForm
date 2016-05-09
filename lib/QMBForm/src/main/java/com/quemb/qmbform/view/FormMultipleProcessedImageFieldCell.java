@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +18,14 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.quemb.qmbform.R;
+import com.quemb.qmbform.descriptor.MediaFile;
 import com.quemb.qmbform.descriptor.RowDescriptor;
 import com.quemb.qmbform.descriptor.Value;
 import com.quemb.qmbform.pojo.ImageItem;
 import com.quemb.qmbform.pojo.ProcessedFile;
 import com.quemb.qmbform.widget.SquareImageView;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -111,6 +114,23 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
                 }
                 if (position < imageItems.size()) {
                     confirmDialog(position);
+                } else {
+                    //Long Click
+                    if (findVideo()) {
+                        showToast("只能包含一个视频文件");
+                        return true;
+                    }
+                    Fragment fragment = getFormItemDescriptor().getFragment();
+                    if (fragment != null) {
+                        try {
+                            Class clazz = fragment.getClass();
+                            Method m1 = clazz.getDeclaredMethod("onAddIconLongClick");
+                            m1.setAccessible(true);
+                            m1.invoke(fragment);
+                        } catch (Exception exc) {
+                            exc.printStackTrace();
+                        }
+                    }
                 }
                 return true;
             }
@@ -170,6 +190,15 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
             }
         }
 
+        return false;
+    }
+
+    private boolean findVideo() {
+        for (ProcessedFile imageItem : imageItems) {
+            if (MediaFile.isVideoFileType(imageItem.getPath())) {
+                return true;
+            }
+        }
         return false;
     }
 
