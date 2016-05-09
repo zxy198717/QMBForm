@@ -18,11 +18,13 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.quemb.qmbform.R;
+import com.quemb.qmbform.brower.PhotoBrowserActivity;
 import com.quemb.qmbform.descriptor.MediaFile;
 import com.quemb.qmbform.descriptor.RowDescriptor;
 import com.quemb.qmbform.descriptor.Value;
 import com.quemb.qmbform.pojo.ImageItem;
 import com.quemb.qmbform.pojo.ProcessedFile;
+import com.quemb.qmbform.widget.PhotoBrowserViewPager;
 import com.quemb.qmbform.widget.SquareImageView;
 
 import java.lang.reflect.Method;
@@ -36,6 +38,7 @@ import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
 
     private static final int REQUEST_IMAGE = 124;
+    private static final int REQUEST_IMAGE_PREVIEW = 125;
     public static final String MAX_COUNT = "MAX_COUNT";
 
     GridView gridView;
@@ -76,6 +79,12 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
                     } else {
                         multipleImagesPicker();
                     }
+                } else {
+                    Intent intent = new Intent(getContext(), PhotoBrowserActivity.class);
+                    intent.putExtra(PhotoBrowserActivity.PHOTOS, imageItems);
+                    intent.putExtra(PhotoBrowserActivity.SELECTED_ITEM, position);
+
+                    startActivityForResult(intent, REQUEST_IMAGE_PREVIEW);
                 }
             }
         });
@@ -165,7 +174,7 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
         // default select images (support array list)
         ArrayList<String> paths = new ArrayList<>();
         for (ProcessedFile imageItem : imageItems) {
-            if (!imageItem.getPath().startsWith("http")) {
+            if (!imageItem.getPath().startsWith("http") && !MediaFile.isVideoFileType(imageItem.getPath())) {
                 paths.add(imageItem.getPath());
             }
         }
@@ -206,7 +215,7 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         builder
-                .setMessage("删除该图片?")
+                .setMessage("确定要删除吗?")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -237,6 +246,14 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
                 }
                 getRowDescriptor().setValue(null);
                 onValueChanged(new Value<List<ProcessedFile>>(imageItems));
+                imageGridAdapter.notifyDataSetChanged();
+            }
+        } else if (requestCode == REQUEST_IMAGE_PREVIEW) {
+            if (resultCode == Activity.RESULT_OK) {
+                ArrayList<ProcessedFile> imageItems = (ArrayList<ProcessedFile>) data.getSerializableExtra(PhotoBrowserActivity.PHOTOS);
+                this.imageItems.clear();
+                this.imageItems.addAll(imageItems);
+                onValueChanged(new Value<List<ProcessedFile>>(this.imageItems));
                 imageGridAdapter.notifyDataSetChanged();
             }
         }

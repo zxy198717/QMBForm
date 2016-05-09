@@ -29,6 +29,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/ic_action_remove"
+        android:focusable="false"
         android:background="@null"
         android:visibility="visible" />
 </com.quemb.qmbform.widget.SquareLayout>

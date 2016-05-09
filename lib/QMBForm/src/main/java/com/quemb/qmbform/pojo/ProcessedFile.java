@@ -1,8 +1,9 @@
 package com.quemb.qmbform.pojo;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class ProcessedFile {
+public class ProcessedFile implements Serializable {
     private Integer id;
     private String path;
     private String name;

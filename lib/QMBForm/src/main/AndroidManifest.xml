@@ -6,6 +6,11 @@
         android:label="@string/app_name"
         >
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+        <activity
+            android:name=".brower.PhotoBrowserActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/PhotoBrowserTheme" />
     </application>
 
 </manifest>
