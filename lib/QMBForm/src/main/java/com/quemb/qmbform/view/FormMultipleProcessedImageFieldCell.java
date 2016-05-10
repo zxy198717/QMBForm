@@ -333,7 +333,12 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
 
                 if (processedFile.isVideo()) {
                     convertView.findViewById(R.id.playImageView).setVisibility(VISIBLE);
-                    Glide.with(getContext()).load(getItem(position).getThumbPath()).into(imageView);
+                    if (getItem(position).getPath().startsWith("http")) {
+                        Glide.with(getContext()).load(getItem(position).getThumbPath()).into(imageView);
+                    } else {
+                        Glide.with(getContext()).load(getItem(position).getPath()).into(imageView);
+                    }
+
                 } else {
                     convertView.findViewById(R.id.playImageView).setVisibility(GONE);
                     Glide.with(getContext()).load(getItem(position).getPath()).into(imageView);
