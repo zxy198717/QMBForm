@@ -305,6 +305,7 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
             ImageButton deleteButton = (ImageButton) convertView.findViewById(R.id.deleteButton);
             circleProgress.setVisibility(GONE);
             deleteButton.setVisibility(GONE);
+            convertView.findViewById(R.id.playImageView).setVisibility(GONE);
             deleteButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -330,7 +331,14 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
                     deleteButton.setVisibility(VISIBLE);
                 }
 
-                Glide.with(getContext()).load(getItem(position).getPath()).into(imageView);
+                if (processedFile.isVideo()) {
+                    convertView.findViewById(R.id.playImageView).setVisibility(VISIBLE);
+                    Glide.with(getContext()).load(getItem(position).getThumbPath()).into(imageView);
+                } else {
+                    convertView.findViewById(R.id.playImageView).setVisibility(GONE);
+                    Glide.with(getContext()).load(getItem(position).getPath()).into(imageView);
+                }
+
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
             return convertView;

@@ -13,6 +13,13 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
+    <ImageView
+        android:id="@+id/playImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/content_icon_video"/>
+
     <com.github.lzyzsd.circleprogress.CircleProgress
         android:id="@+id/circleProgress"
         android:layout_width="40dp"
