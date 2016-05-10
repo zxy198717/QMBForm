@@ -185,7 +185,7 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
     private int uploadedImageCount() {
         int count = 0;
         for (ProcessedFile imageItem : imageItems) {
-            if (imageItem.getPath().startsWith("http")) {
+            if (imageItem.getPath().startsWith("http") || imageItem.isVideo()) {
                 count ++;
             }
         }
