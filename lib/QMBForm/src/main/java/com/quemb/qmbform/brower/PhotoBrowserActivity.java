@@ -197,7 +197,9 @@ public class PhotoBrowserActivity extends AppCompatActivity {
                 final VideoView videoView = (VideoView) v.findViewById(R.id.videoView);
                 videoView.setVideoURI(Uri.parse(processedFile.getPath()));
                 final ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
-                Glide.with(PhotoBrowserActivity.this).load(processedFile.getThumbPath()).into(imageView);
+                final ProgressBar progressBar = (ProgressBar)v.findViewById(R.id.progressBar);
+
+                //Glide.with(PhotoBrowserActivity.this).load(processedFile.getThumbPath()).into(imageView);
                 v.findViewById(R.id.playButton).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -217,7 +219,8 @@ public class PhotoBrowserActivity extends AppCompatActivity {
                 videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
-                        imageView.animate().alpha(0).setDuration(500).start();
+                        //imageView.animate().alpha(0).setDuration(500).start();
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
 

@@ -5,11 +5,6 @@
     android:background="#000000"
     android:orientation="vertical">
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
-
     <VideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
@@ -21,6 +16,12 @@
         android:id="@+id/imageView"
         android:visibility="gone"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
