@@ -1,5 +1,6 @@
 package com.quemb.qmbform.sample.controller;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -15,6 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.kbeanie.multipicker.api.Picker;
+import com.kbeanie.multipicker.api.VideoPicker;
+import com.kbeanie.multipicker.api.callbacks.VideoPickerCallback;
+import com.kbeanie.multipicker.api.entity.ChosenVideo;
 import com.quemb.qmbform.FormManager;
 import com.quemb.qmbform.OnFormRowClickListener;
 import com.quemb.qmbform.descriptor.DataSource;
@@ -49,6 +54,7 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
 
     public static String TAG = "SampleFormFragment";
     private FormManager mFormManager;
+    VideoPicker videoPicker;
 
     public static final SampleFormFragment newInstance()
     {
@@ -254,8 +260,42 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
         mSaveMenuItem = menu.findItem(R.id.action_save);
     }
 
-    protected void onAddIconLongClick(RowDescriptor rowDescriptor) {
+    public void onAddIconLongClick(final RowDescriptor rowDescriptor) {
         Log.e("ddd", "onAddIconLongClick");
+        videoPicker = new VideoPicker(this);
+        videoPicker.shouldGenerateMetadata(true);
+        videoPicker.shouldGeneratePreviewImages(true);
+        videoPicker.setVideoPickerCallback(new VideoPickerCallback() {
+            @Override
+            public void onVideosChosen(List<ChosenVideo> list) {
+                ChosenVideo video = list.get(0);
+                Value<List<ProcessedFile>> value = rowDescriptor.getValue();
+                ArrayList<ProcessedFile> imageItems = null;
+                if (value != null && value.getValue() != null) {
+                    imageItems = (ArrayList<ProcessedFile>) value.getValue();
+                }
+
+                if (imageItems == null) {
+                    imageItems = new ArrayList<>();
+                }
+
+                ProcessedFile vv = new ProcessedFile(video.getOriginalPath());
+                vv.setVideo(true);
+                vv.setThumbPath(video.getPreviewImage());
+                imageItems.add(vv);
+
+                rowDescriptor.setValue(new Value<ArrayList<ProcessedFile>>(imageItems));
+                if (null != rowDescriptor.getCell()) {
+                    rowDescriptor.getCell().valueUpdate();
+                }
+            }
+
+            @Override
+            public void onError(String s) {
+
+            }
+        });
+        videoPicker.pickVideo();
     }
 
     @Override
@@ -319,6 +359,11 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mFormManager.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Picker.PICK_VIDEO_DEVICE && resultCode == Activity.RESULT_OK) {
+            videoPicker.submit(data);
+        }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 

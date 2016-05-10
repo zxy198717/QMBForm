@@ -6,7 +6,9 @@ import java.io.Serializable;
 public class ProcessedFile implements Serializable {
     private Integer id;
     private String path;
+    private String thumbPath;
     private String name;
+    private boolean isVideo;
 
     private Object logicFile;
 
@@ -45,6 +47,22 @@ public class ProcessedFile implements Serializable {
 
     public String getPath() {
         return path;
+    }
+
+    public void setThumbPath(String thumbPath) {
+        this.thumbPath = thumbPath;
+    }
+
+    public String getThumbPath() {
+        return thumbPath;
+    }
+
+    public void setVideo(boolean video) {
+        isVideo = video;
+    }
+
+    public boolean isVideo() {
+        return isVideo;
     }
 
     public void setLogicFile(Object logicFile) {

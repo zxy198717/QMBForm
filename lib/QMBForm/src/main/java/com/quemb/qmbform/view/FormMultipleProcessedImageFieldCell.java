@@ -112,7 +112,7 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
         if (imageItems == null) {
             imageItems = new ArrayList<>();
         }
-
+        reOrderImages();
         gridView.setAdapter(imageGridAdapter = new ImageGridAdapter());
 
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -204,11 +204,25 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
 
     private boolean findVideo() {
         for (ProcessedFile imageItem : imageItems) {
-            if (MediaFile.isVideoFileType(imageItem.getPath())) {
+            if (imageItem.isVideo()) {
                 return true;
             }
         }
         return false;
+    }
+
+    private void reOrderImages() {
+        ProcessedFile video = null;
+        for (ProcessedFile imageItem : imageItems) {
+            if (imageItem.isVideo()) {
+                video = imageItem;
+            }
+        }
+
+        if (video != null) {
+            imageItems.remove(video);
+            imageItems.add(video);
+        }
     }
 
     private void confirmDialog(final int position) {
@@ -245,6 +259,7 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
                     }
                 }
                 getRowDescriptor().setValue(null);
+                reOrderImages();
                 onValueChanged(new Value<List<ProcessedFile>>(imageItems));
                 imageGridAdapter.notifyDataSetChanged();
             }
@@ -253,6 +268,7 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
                 ArrayList<ProcessedFile> imageItems = (ArrayList<ProcessedFile>) data.getSerializableExtra(PhotoBrowserActivity.PHOTOS);
                 this.imageItems.clear();
                 this.imageItems.addAll(imageItems);
+                reOrderImages();
                 onValueChanged(new Value<List<ProcessedFile>>(this.imageItems));
                 imageGridAdapter.notifyDataSetChanged();
             }
@@ -294,6 +310,7 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
                 public void onClick(View v) {
                     imageItems.remove(position);
                     getRowDescriptor().setValue(null);
+                    reOrderImages();
                     onValueChanged(new Value<List<ProcessedFile>>(imageItems));
                     notifyDataSetChanged();
                 }

@@ -2,6 +2,9 @@ package com.quemb.qmbform.brower;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -9,13 +12,17 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.ProgressBar;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.quemb.qmbform.R;
@@ -34,6 +41,7 @@ public class PhotoBrowserActivity extends AppCompatActivity {
 
     public final static String PHOTOS = "PhotoBrowserFragment.PHOTOS";
     public final static String SELECTED_ITEM = "PhotoBrowserFragment.SELECTED_ITEM";
+    public final static String PREVIEW_MODE = "PhotoBrowserActivity.PREVIEW_MODE";
 
     ViewPager viewpager;
     CircleIndicator indicator;
@@ -44,11 +52,16 @@ public class PhotoBrowserActivity extends AppCompatActivity {
     ArrayList<ProcessedFile> photos = new ArrayList<>();
     int currentItem;
     int photoCount;
+    boolean previewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_photo_browser);
+        previewModel = getIntent().getBooleanExtra(PREVIEW_MODE, false);
+        if (previewModel) {
+            getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+        setContentView(R.layout.qm_activity_photo_preview);
         setupViews();
     }
 
@@ -59,7 +72,9 @@ public class PhotoBrowserActivity extends AppCompatActivity {
         indicator = (CircleIndicator) findViewById(R.id.indicator);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        if (previewModel) {
+            toolbar.setVisibility(View.GONE);
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -145,6 +160,18 @@ public class PhotoBrowserActivity extends AppCompatActivity {
         super.finish();
     }
 
+    private void pageItemClick() {
+        if (previewModel) {
+            super.finish();
+            return;
+        }
+        if (toolbar.getVisibility() == View.GONE) {
+            toolbar.setVisibility(View.VISIBLE);
+        } else {
+            toolbar.setVisibility(View.GONE);
+        }
+    }
+
     class SamplePagerAdapter extends PagerAdapter {
 
         ArrayList<ProcessedFile> photos = new ArrayList<>();
@@ -161,9 +188,47 @@ public class PhotoBrowserActivity extends AppCompatActivity {
 
         @Override
         public View instantiateItem(ViewGroup container, int position) {
+
+            ProcessedFile processedFile = photos.get(position);
+
+            if (processedFile.isVideo()) {
+                View v = LayoutInflater.from(PhotoBrowserActivity.this).inflate(R.layout.qm_video_item, null);
+
+                final VideoView videoView = (VideoView) v.findViewById(R.id.videoView);
+                videoView.setVideoURI(Uri.parse(processedFile.getPath()));
+                final ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
+                Glide.with(PhotoBrowserActivity.this).load(processedFile.getThumbPath()).into(imageView);
+                v.findViewById(R.id.playButton).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pageItemClick();
+                    }
+                });
+
+                videoView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        videoView.start();
+                        videoView.requestFocus();
+                        videoView.setVisibility(View.VISIBLE);
+                    }
+                }, 500);
+
+                videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        imageView.animate().alpha(0).setDuration(500).start();
+                    }
+                });
+
+                container.addView(v, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+                return v;
+            }
+
             PhotoView photoView = new PhotoView(container.getContext());
             //ImageUtil.load(container.getContext(), photos.get(position), photoView);
             FrameLayout frameLayout = new FrameLayout(PhotoBrowserActivity.this);
+
             ProgressBar progressBar = new ProgressBar(PhotoBrowserActivity.this);
             frameLayout.addView(progressBar, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) progressBar.getLayoutParams();
@@ -182,20 +247,12 @@ public class PhotoBrowserActivity extends AppCompatActivity {
             photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
                 @Override
                 public void onPhotoTap(View view, float x, float y) {
-                    if (toolbar.getVisibility() == View.GONE) {
-                        toolbar.setVisibility(View.VISIBLE);
-                    } else {
-                        toolbar.setVisibility(View.GONE);
-                    }
+                    pageItemClick();
                 }
 
                 @Override
                 public void onOutsidePhotoTap() {
-                    if (toolbar.getVisibility() == View.GONE) {
-                        toolbar.setVisibility(View.VISIBLE);
-                    } else {
-                        toolbar.setVisibility(View.GONE);
-                    }
+                    pageItemClick();
                 }
             });
 
