@@ -83,7 +83,9 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
                     Intent intent = new Intent(getContext(), PhotoBrowserActivity.class);
                     intent.putExtra(PhotoBrowserActivity.PHOTOS, imageItems);
                     intent.putExtra(PhotoBrowserActivity.SELECTED_ITEM, position);
-
+                    if (getRowDescriptor().getDisabled()) {
+                        intent.putExtra(PhotoBrowserActivity.PREVIEW_MODE, true);
+                    }
                     startActivityForResult(intent, REQUEST_IMAGE_PREVIEW);
                 }
             }
