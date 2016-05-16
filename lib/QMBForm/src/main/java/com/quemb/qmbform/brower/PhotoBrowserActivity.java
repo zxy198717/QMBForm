@@ -231,7 +231,8 @@ public class PhotoBrowserActivity extends AppCompatActivity {
             FrameLayout frameLayout = new FrameLayout(PhotoBrowserActivity.this);
 
             ImageView thumbImageView = new ImageView(PhotoBrowserActivity.this);
-            frameLayout.addView(thumbImageView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            thumbImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            frameLayout.addView(thumbImageView, getResources().getDimensionPixelSize(R.dimen.browser_thumb_size), getResources().getDimensionPixelSize(R.dimen.browser_thumb_size));
             FrameLayout.LayoutParams thumbImageViewLP = (FrameLayout.LayoutParams) thumbImageView.getLayoutParams();
             thumbImageViewLP.gravity = Gravity.CENTER;
             if (photos.get(position).getThumbPath() != null && !photos.get(position).getThumbPath().isEmpty()) {
