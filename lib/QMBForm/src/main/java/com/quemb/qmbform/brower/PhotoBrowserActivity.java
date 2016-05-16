@@ -228,25 +228,26 @@ public class PhotoBrowserActivity extends AppCompatActivity {
                 return v;
             }
 
-            PhotoView photoView = new PhotoView(container.getContext());
-            //ImageUtil.load(container.getContext(), photos.get(position), photoView);
             FrameLayout frameLayout = new FrameLayout(PhotoBrowserActivity.this);
+
+            ImageView thumbImageView = new ImageView(PhotoBrowserActivity.this);
+            frameLayout.addView(thumbImageView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            FrameLayout.LayoutParams thumbImageViewLP = (FrameLayout.LayoutParams) thumbImageView.getLayoutParams();
+            thumbImageViewLP.gravity = Gravity.CENTER;
+            if (photos.get(position).getThumbPath() != null && !photos.get(position).getThumbPath().isEmpty()) {
+                Glide.with(PhotoBrowserActivity.this).load(photos.get(position).getThumbPath()).into(thumbImageView);
+            }
 
             ProgressBar progressBar = new ProgressBar(PhotoBrowserActivity.this);
             frameLayout.addView(progressBar, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) progressBar.getLayoutParams();
             lp.gravity = Gravity.CENTER;
 
+            PhotoView photoView = new PhotoView(container.getContext());
             // Now just add PhotoView to ViewPager and return it
             frameLayout.addView(photoView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-
-
             Glide.with(PhotoBrowserActivity.this).load(photos.get(position).getPath()).into(photoView);
-            /*
-            Picasso.with(container.getContext())
-                    .load(photos.get(position).getPath())
-                    .into(photoView);
-*/
+
             photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
                 @Override
                 public void onPhotoTap(View view, float x, float y) {
