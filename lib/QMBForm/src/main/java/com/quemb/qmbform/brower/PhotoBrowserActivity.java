@@ -125,13 +125,7 @@ public class PhotoBrowserActivity extends AppCompatActivity {
         if (currentItem > 0) {
             viewpager.setCurrentItem(currentItem);
         } else {
-            viewpager.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    viewpager.setCurrentItem(currentItem);
-                }
-            }, 100);
-            //setTitle(1 + "/" + photos.size());
+            setTitle(1 + "/" + photos.size());
         }
     }
 
