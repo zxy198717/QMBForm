@@ -2,8 +2,8 @@
 <resources>
 
     <style name="PhotoBrowserTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">#21282C</item>
-        <item name="colorPrimaryDark">#21282C</item>
+        <item name="colorPrimary">#181818</item>
+        <item name="colorPrimaryDark">#cc181818</item>
         <item name="actionMenuTextColor">#ffffff</item>
     </style>
 

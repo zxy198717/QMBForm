@@ -20,8 +20,10 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -48,11 +50,15 @@ public class PhotoBrowserActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     SamplePagerAdapter samplePagerAdapter;
+    TextView titleTextView;
 
     ArrayList<ProcessedFile> photos = new ArrayList<>();
     int currentItem;
     int photoCount;
     boolean previewModel;
+    VideoView videoView;
+
+    protected LinearLayout footerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +77,10 @@ public class PhotoBrowserActivity extends AppCompatActivity {
         viewpager = (ViewPager) findViewById(R.id.viewpager);
         indicator = (CircleIndicator) findViewById(R.id.indicator);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        titleTextView = (TextView) findViewById(R.id.titleTextView);
+        footerLayout =  (LinearLayout) findViewById(R.id.footerLayout);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         if (previewModel) {
             toolbar.setVisibility(View.GONE);
         }
@@ -90,6 +99,20 @@ public class PhotoBrowserActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 setTitle(position + 1 + "/" + photos.size());
+                ProcessedFile processedFile = photos.get(position);
+
+                if (processedFile.isVideo()) {
+                    if (videoView != null) {
+                        videoView.start();
+                        videoView.resume();
+                        videoView.requestFocus();
+                        videoView.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    if (videoView != null) {
+                        videoView.pause();
+                    }
+                }
             }
 
             @Override
@@ -102,7 +125,13 @@ public class PhotoBrowserActivity extends AppCompatActivity {
         if (currentItem > 0) {
             viewpager.setCurrentItem(currentItem);
         } else {
-            setTitle(1 + "/" + photos.size());
+            viewpager.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    viewpager.setCurrentItem(currentItem);
+                }
+            }, 100);
+            //setTitle(1 + "/" + photos.size());
         }
     }
 
@@ -160,7 +189,13 @@ public class PhotoBrowserActivity extends AppCompatActivity {
         super.finish();
     }
 
-    private void pageItemClick() {
+    @Override
+    protected void onTitleChanged(CharSequence title, int color) {
+        super.onTitleChanged(title, color);
+        titleTextView.setText(title);
+    }
+
+    protected void pageItemClick() {
         if (previewModel) {
             super.finish();
             return;
@@ -194,12 +229,12 @@ public class PhotoBrowserActivity extends AppCompatActivity {
             if (processedFile.isVideo()) {
                 View v = LayoutInflater.from(PhotoBrowserActivity.this).inflate(R.layout.qm_video_item, null);
 
-                final VideoView videoView = (VideoView) v.findViewById(R.id.videoView);
+                videoView = (VideoView) v.findViewById(R.id.videoView);
                 videoView.setVideoURI(Uri.parse(processedFile.getPath()));
                 final ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
                 final ProgressBar progressBar = (ProgressBar)v.findViewById(R.id.progressBar);
 
-                //Glide.with(PhotoBrowserActivity.this).load(processedFile.getThumbPath()).into(imageView);
+                Glide.with(PhotoBrowserActivity.this).load(processedFile.getThumbPath()).into(imageView);
                 v.findViewById(R.id.playButton).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -207,22 +242,25 @@ public class PhotoBrowserActivity extends AppCompatActivity {
                     }
                 });
 
-                videoView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        videoView.start();
-                        videoView.requestFocus();
-                        videoView.setVisibility(View.VISIBLE);
-                    }
-                }, 500);
-
                 videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
-                        //imageView.animate().alpha(0).setDuration(500).start();
+                        imageView.animate().alpha(0).setDuration(500).start();
                         progressBar.setVisibility(View.GONE);
                     }
                 });
+
+                if (currentItem == position) {
+                    videoView.start();
+                    videoView.resume();
+                    videoView.requestFocus();
+                    videoView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            videoView.setVisibility(View.VISIBLE);
+                        }
+                    }, 500);
+                }
 
                 container.addView(v, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 return v;
