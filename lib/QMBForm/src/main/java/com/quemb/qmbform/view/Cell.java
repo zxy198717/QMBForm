@@ -46,12 +46,6 @@ public abstract class Cell extends LinearLayout {
         init();
         update();
         afterInit();
-
-        IntentFilter intentFilter = new IntentFilter();
-
-        intentFilter.addAction("new_waiting_activity_result");
-
-        getContext().registerReceiver(NewWaitingBroadcastReceiver, intentFilter);
     }
 
     protected void afterInit() {
@@ -79,6 +73,9 @@ public abstract class Cell extends LinearLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("new_waiting_activity_result");
+        getContext().registerReceiver(NewWaitingBroadcastReceiver, intentFilter);
     }
 
     @Override
