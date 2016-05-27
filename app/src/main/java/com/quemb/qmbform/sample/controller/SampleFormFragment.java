@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,7 +50,7 @@ import java.util.List;
 public class SampleFormFragment extends Fragment implements OnFormRowValueChangedListener,
         OnFormRowClickListener{
 
-    private ListView mListView;
+    private RecyclerView mListView;
     private HashMap<String, Value<?>> mChangesMap;
     private MenuItem mSaveMenuItem;
 
@@ -74,9 +76,16 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.form_sample, container, false);
+        View v = inflater.inflate(R.layout.form_sample_recycler, container, false);
 
-        mListView = (ListView) v.findViewById(R.id.list);
+        mListView = (RecyclerView) v.findViewById(R.id.list);
+
+        //创建默认的线性LayoutManager
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        mListView.setLayoutManager(mLayoutManager);
+//如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
+        //mListView.setHasFixedSize(true);
+//创建并设置Adapter
 
         return v;
     }

@@ -28,8 +28,9 @@ public class FormMultipleFileFieldCell extends FormTitleFieldCell implements Fil
 
     ListView listView;
 
-    TimerTask task = new TimerTask() {
-        public void run() {
+    class MyTask extends TimerTask{
+        @Override
+        public void run(){
             FormMultipleFileFieldCell.this.post(new Runnable() {
                 @Override
                 public void run() {
@@ -90,13 +91,23 @@ public class FormMultipleFileFieldCell extends FormTitleFieldCell implements Fil
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        timer.schedule(task, 1000, 1000);
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
+        timer = new Timer(true);
+        timer.schedule(new MyTask(), 1000, 1000);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
     }
 
     @Override

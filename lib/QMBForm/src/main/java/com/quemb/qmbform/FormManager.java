@@ -1,6 +1,7 @@
 package com.quemb.qmbform;
 
 import com.quemb.qmbform.adapter.FormAdapter;
+import com.quemb.qmbform.adapter.FormRecyclerViewAdapter;
 import com.quemb.qmbform.descriptor.FormDescriptor;
 import com.quemb.qmbform.descriptor.FormItemDescriptor;
 import com.quemb.qmbform.descriptor.OnFormRowChangeListener;
@@ -14,6 +15,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -29,12 +31,38 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
     private FormDescriptor mFormDescriptor;
     protected ListView mListView;
     private FormAdapter adapter;
+    protected RecyclerView mRecyclerView;
+    private FormRecyclerViewAdapter formRecyclerViewAdapter;
     protected OnFormRowClickListener mOnFormRowClickListener;
     private OnFormRowChangeListener mOnFormRowChangeListener;
     private OnFormRowValueChangedListener mOnFormRowValueChangedListener;
 
     public FormManager() {
 
+    }
+
+    public void setup(FormDescriptor formDescriptor, final RecyclerView recyclerView, Activity activity) {
+        mRecyclerView = recyclerView;
+        formRecyclerViewAdapter = FormRecyclerViewAdapter.newInstance(formDescriptor, activity);
+        formRecyclerViewAdapter.setOnFormRowClickListener(new OnFormRowClickListener() {
+            @Override
+            public void onFormRowClick(FormItemDescriptor itemDescriptor) {
+                if (mOnFormRowClickListener != null) {
+                    mOnFormRowClickListener.onFormRowClick(itemDescriptor);
+                }
+            }
+        });
+
+        mFormDescriptor = formDescriptor;
+        mFormDescriptor.setOnFormRowChangeListener(this);
+        mFormDescriptor.setOnFormRowValueChangedListener(this);
+        mRecyclerView.setAdapter(formRecyclerViewAdapter);
+        mRecyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+    }
+
+    public void setup(FormDescriptor formDescriptor, final RecyclerView recyclerView, Fragment fragment) {
+        setup(formDescriptor, recyclerView, fragment.getActivity());
+        formRecyclerViewAdapter.setFragment(fragment);
     }
 
     public void setup(FormDescriptor formDescriptor, final ListView listView, Fragment fragment) {
@@ -98,16 +126,20 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
 
     public void updateRows() {
 
-        ListAdapter listAdapter = mListView.getAdapter();
-        FormAdapter adapter = null;
-        if (listAdapter instanceof HeaderViewListAdapter) {
-            adapter = (FormAdapter)((HeaderViewListAdapter)listAdapter).getWrappedAdapter();
-        } else {
-            adapter = (FormAdapter) listAdapter;
-        }
+        if (mListView != null) {
+            ListAdapter listAdapter = mListView.getAdapter();
+            FormAdapter adapter = null;
+            if (listAdapter instanceof HeaderViewListAdapter) {
+                adapter = (FormAdapter)((HeaderViewListAdapter)listAdapter).getWrappedAdapter();
+            } else {
+                adapter = (FormAdapter) listAdapter;
+            }
 
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+        } else {
+            formRecyclerViewAdapter.notifyDataSetChanged();
         }
     }
 

@@ -46,8 +46,9 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
     ImageGridAdapter imageGridAdapter;
     private int max;
 
-    TimerTask task = new TimerTask() {
-        public void run() {
+    class MyTask extends TimerTask{
+        @Override
+        public void run(){
             FormMultipleProcessedImageFieldCell.this.post(new Runnable() {
                 @Override
                 public void run() {
@@ -156,13 +157,23 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        timer.schedule(task, 1000, 1000);
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
+        timer = new Timer(true);
+        timer.schedule(new MyTask(), 1000, 1000);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
     }
 
     protected void multipleImagesPicker() {
