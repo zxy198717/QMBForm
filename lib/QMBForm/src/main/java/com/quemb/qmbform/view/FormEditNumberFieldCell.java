@@ -50,8 +50,8 @@ public class FormEditNumberFieldCell extends FormEditTextFieldCell {
     protected void onEditTextChanged(String string) {
 
         try {
-            Float floatValue = Float.parseFloat(string);
-            onValueChanged(new Value<Number>(floatValue));
+            Double doubleValue = Double.parseDouble(string);
+            onValueChanged(new Value<Number>(doubleValue));
         } catch (NumberFormatException e) {
             Log.e(TAG, e.getMessage(), e);
         }
