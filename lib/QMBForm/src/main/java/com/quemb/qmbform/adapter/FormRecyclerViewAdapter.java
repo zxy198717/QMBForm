@@ -51,13 +51,12 @@ public class FormRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        final Cell cell = (Cell) holder.itemView;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FormItemDescriptor itemDescriptor = mItems.get(position);
 
-
-                Cell cell = (Cell) holder.itemView;
                 if (cell != null && itemDescriptor instanceof RowDescriptor) {
                     RowDescriptor rowDescriptor = (RowDescriptor) itemDescriptor;
                     rowDescriptor.setCell(cell);
@@ -80,6 +79,8 @@ public class FormRecyclerViewAdapter extends RecyclerView.Adapter {
                 }
             }
         });
+
+        cell.valueUpdate();
     }
 
     @Override

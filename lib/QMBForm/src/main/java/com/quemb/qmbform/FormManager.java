@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,9 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
 
     public void setup(FormDescriptor formDescriptor, final RecyclerView recyclerView, Activity activity) {
         mRecyclerView = recyclerView;
+        if (mRecyclerView.getLayoutManager() == null) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        }
         formRecyclerViewAdapter = FormRecyclerViewAdapter.newInstance(formDescriptor, activity);
         formRecyclerViewAdapter.setOnFormRowClickListener(new OnFormRowClickListener() {
             @Override
