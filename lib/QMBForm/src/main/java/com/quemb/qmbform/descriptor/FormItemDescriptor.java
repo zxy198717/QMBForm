@@ -85,6 +85,16 @@ public class FormItemDescriptor {
         mCellConfig = cellConfig;
     }
 
+    public FormItemDescriptor putCellConfig(String key, Object value) {
+        if (mCellConfig == null) {
+            mCellConfig = new HashMap<>();
+        }
+
+        mCellConfig.put(key, value);
+
+        return this;
+    }
+
     public void setResourceId(@LayoutRes int resourceId) {
         this.resourceId = resourceId;
     }
