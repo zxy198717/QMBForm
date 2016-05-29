@@ -29,8 +29,9 @@ public class SectionCell extends Cell {
         setClickable(false);
 
         mTextView = (TextView) findViewById(R.id.textView);
-        mTextView.setTextColor(getThemeValue(R.attr.colorAccent));
-
+        if (getFormItemDescriptor().getResourceId() == 0) {
+            mTextView.setTextColor(getThemeValue(R.attr.colorAccent));
+        }
     }
 
     @Override
