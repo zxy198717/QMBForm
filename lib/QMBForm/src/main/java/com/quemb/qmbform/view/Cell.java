@@ -64,7 +64,7 @@ public abstract class Cell extends LinearLayout {
 
         setBackgroundColor(getResources().getColor(R.color.form_cell_background));
 
-        if (shouldAddDivider()) {
+        if (shouldAddDivider() && mFormItemDescriptor.isShouldAddDivider()) {
             addView(getDividerView());
         }
 

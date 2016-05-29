@@ -28,6 +28,7 @@ public class FormItemDescriptor {
 
     private boolean isFirstInSection;
     private boolean isLastInSection;
+    private boolean shouldAddDivider = true;
 
     public String getTitle() {
         return mTitle;
@@ -67,6 +68,14 @@ public class FormItemDescriptor {
 
     public boolean isFirstInSection() {
         return isFirstInSection;
+    }
+
+    public void setShouldAddDivider(boolean shouldAddDivider) {
+        this.shouldAddDivider = shouldAddDivider;
+    }
+
+    public boolean isShouldAddDivider() {
+        return shouldAddDivider;
     }
 
     public OnFormRowClickListener getOnFormRowClickListener() {
