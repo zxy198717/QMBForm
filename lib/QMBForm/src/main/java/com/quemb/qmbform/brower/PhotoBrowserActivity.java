@@ -71,6 +71,19 @@ public class PhotoBrowserActivity extends AppCompatActivity {
         setupViews();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (photos != null && photos.size() > 0 && viewpager.getCurrentItem() < photos.size()) {
+            ProcessedFile processedFile = photos.get(viewpager.getCurrentItem());
+
+            if (processedFile.isVideo() && videoView != null) {
+                videoView.resume();
+                videoView.requestFocus();
+            }
+        }
+    }
+
     protected void setupViews() {
         photos = (ArrayList<ProcessedFile>) getIntent().getSerializableExtra(PHOTOS);
         photoCount = photos.size();
