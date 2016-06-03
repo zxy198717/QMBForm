@@ -78,6 +78,7 @@ public class PhotoBrowserActivity extends AppCompatActivity {
             ProcessedFile processedFile = photos.get(viewpager.getCurrentItem());
 
             if (processedFile.isVideo() && videoView != null) {
+                videoView.start();
                 videoView.resume();
                 videoView.requestFocus();
             }
