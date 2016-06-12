@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.kbeanie.multipicker.api.Picker;
@@ -247,6 +248,14 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
 
         mFormManager = new FormManager();
         mFormManager.setup(descriptor, mListView, this);
+        Button button1 = new Button(getContext());
+        button1.setText("Header");
+        mFormManager.setHeader(button1);
+
+        button1 = new Button(getContext());
+        button1.setText("Footer");
+        mFormManager.setFooter(button1);
+
         mFormManager.setOnFormRowClickListener(this);
         mFormManager.setOnFormRowValueChangedListener(this);
 

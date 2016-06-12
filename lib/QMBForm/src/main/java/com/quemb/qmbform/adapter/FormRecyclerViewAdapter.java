@@ -22,12 +22,18 @@ import java.util.List;
  */
 public class FormRecyclerViewAdapter extends RecyclerView.Adapter {
 
+    private static final int TYPE_HEADER = Integer.MAX_VALUE;
+    private static final int TYPE_FOOTER = Integer.MAX_VALUE -1;
+
     private FormDescriptor mFormDescriptor;
     private ArrayList<FormItemDescriptor> mItems;
     private Context mContext;
     private Fragment mFragment;
     private Boolean mEnableSectionSeperator;
     protected OnFormRowClickListener mOnFormRowClickListener;
+
+    View headerView;
+    View footerView;
 
     public static FormRecyclerViewAdapter newInstance(FormDescriptor formDescriptor, Context context) {
         FormRecyclerViewAdapter formAdapter = new FormRecyclerViewAdapter();
@@ -40,6 +46,18 @@ public class FormRecyclerViewAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
+        if (viewType == TYPE_FOOTER) {
+            footerView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
+            FormRecyclerViewHolder holder = new FormRecyclerViewHolder(footerView);
+            return holder;
+        }
+
+        if (viewType == TYPE_HEADER) {
+            headerView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
+            FormRecyclerViewHolder holder = new FormRecyclerViewHolder(headerView);
+            return holder;
+        }
+
         FormItemDescriptor rowDescriptor = mItems.get(viewType);
         rowDescriptor.setFragment(mFragment);
         Cell cell = CellViewFactory.getInstance().createViewForFormItemDescriptor(mContext, mItems.get(viewType));
@@ -51,11 +69,16 @@ public class FormRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+
+        if (getItemViewType(position) == TYPE_HEADER || getItemViewType(position) == TYPE_FOOTER) {
+            return;
+        }
+
         final Cell cell = (Cell) holder.itemView;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FormItemDescriptor itemDescriptor = mItems.get(position);
+                FormItemDescriptor itemDescriptor = mItems.get( getItemViewType(position) );
 
                 if (cell != null && itemDescriptor instanceof RowDescriptor) {
                     RowDescriptor rowDescriptor = (RowDescriptor) itemDescriptor;
@@ -107,12 +130,29 @@ public class FormRecyclerViewAdapter extends RecyclerView.Adapter {
             sectionCount++;
         }
 
-        return mItems.size();
+        int itemCount = mItems.size();
+        if (headerView != null)
+            itemCount++;
+        if (footerView != null)
+            itemCount++;
+        return itemCount;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position;
+        if (headerView != null && isPositionHeader(position))
+            return TYPE_HEADER;
+        if (footerView != null && isPositionFooter(position))
+            return TYPE_FOOTER;
+        return headerView != null ? position -1 : position;
+    }
+
+    private boolean isPositionHeader(int position) {
+        return position == 0;
+    }
+
+    private boolean isPositionFooter(int position) {
+        return position == getItemCount() - 1;
     }
 
     @Override
@@ -134,5 +174,15 @@ public class FormRecyclerViewAdapter extends RecyclerView.Adapter {
 
     public void setOnFormRowClickListener(OnFormRowClickListener onFormRowClickListener) {
         mOnFormRowClickListener = onFormRowClickListener;
+    }
+
+    public void setHeaderView(View headerView) {
+        this.headerView = headerView;
+        notifyDataSetChanged();
+    }
+
+    public void setFooterView(View footerView) {
+        this.footerView = footerView;
+        notifyDataSetChanged();
     }
 }

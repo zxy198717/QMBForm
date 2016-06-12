@@ -120,6 +120,18 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
 
     }
 
+    public void setHeader(View header) {
+        if (formRecyclerViewAdapter != null) {
+            formRecyclerViewAdapter.setHeaderView(header);
+        }
+    }
+
+    public void setFooter(View footer) {
+        if (formRecyclerViewAdapter != null) {
+            formRecyclerViewAdapter.setFooterView(footer);
+        }
+    }
+
     public OnFormRowClickListener getOnFormRowClickListener() {
         return mOnFormRowClickListener;
     }
