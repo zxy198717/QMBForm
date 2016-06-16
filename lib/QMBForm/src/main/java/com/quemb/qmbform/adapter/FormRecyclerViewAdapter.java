@@ -73,12 +73,12 @@ public class FormRecyclerViewAdapter extends RecyclerView.Adapter {
         if (getItemViewType(position) == TYPE_HEADER || getItemViewType(position) == TYPE_FOOTER) {
             return;
         }
-
+        final FormItemDescriptor itemDescriptor = mItems.get( getItemViewType(position) );
         final Cell cell = (Cell) holder.itemView;
+        cell.setFormItemDescriptor(itemDescriptor);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FormItemDescriptor itemDescriptor = mItems.get( getItemViewType(position) );
 
                 if (cell != null && itemDescriptor instanceof RowDescriptor) {
                     RowDescriptor rowDescriptor = (RowDescriptor) itemDescriptor;
