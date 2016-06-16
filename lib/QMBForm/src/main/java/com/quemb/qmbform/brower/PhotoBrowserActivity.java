@@ -230,9 +230,9 @@ public class PhotoBrowserActivity extends AppCompatActivity {
         }
 
         @Override
-        public View instantiateItem(ViewGroup container, int position) {
+        public View instantiateItem(ViewGroup container, final int position) {
 
-            ProcessedFile processedFile = photos.get(position);
+            final ProcessedFile processedFile = photos.get(position);
 
             if (processedFile.isVideo()) {
                 View v = LayoutInflater.from(PhotoBrowserActivity.this).inflate(R.layout.qm_video_item, null);
@@ -255,6 +255,17 @@ public class PhotoBrowserActivity extends AppCompatActivity {
                     public void onPrepared(MediaPlayer mp) {
                         imageView.animate().alpha(0).setDuration(500).start();
                         progressBar.setVisibility(View.GONE);
+                    }
+                });
+
+                videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        if (currentItem == position) {
+                            videoView.setVideoURI(Uri.parse(processedFile.getPath()));
+                            videoView.start();
+                            videoView.requestFocus();
+                        }
                     }
                 });
 
