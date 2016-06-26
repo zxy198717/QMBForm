@@ -76,6 +76,7 @@ public class FormRecyclerViewAdapter extends RecyclerView.Adapter {
         final FormItemDescriptor itemDescriptor = mItems.get( getItemViewType(position) );
         final Cell cell = (Cell) holder.itemView;
         cell.setFormItemDescriptor(itemDescriptor);
+        itemDescriptor.setCell(cell);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
