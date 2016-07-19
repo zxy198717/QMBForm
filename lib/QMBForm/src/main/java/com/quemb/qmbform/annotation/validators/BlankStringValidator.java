@@ -14,7 +14,7 @@ public class BlankStringValidator implements FormValidator {
     @Override
     public RowValidationError validate(RowDescriptor descriptor) {
         Value value = descriptor.getValue();
-        if (value.getValue() != null &&
+        if (value != null && value.getValue() != null &&
                 value.getValue() instanceof String) {
             String str = (String) value.getValue();
 

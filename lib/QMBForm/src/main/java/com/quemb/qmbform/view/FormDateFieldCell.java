@@ -39,6 +39,10 @@ public class FormDateFieldCell extends FormDetailTextInlineFieldCell {
     @Override
     protected void update() {
 
+        if (getRowDescriptor().getHint(getContext()) != null) {
+            getDetailTextView().setHint(getRowDescriptor().getHint(getContext()));
+        }
+
         String title = getFormItemDescriptor().getTitle();
         mTextView.setText(title);
         mTextView.setVisibility(title == null ? GONE : VISIBLE);
