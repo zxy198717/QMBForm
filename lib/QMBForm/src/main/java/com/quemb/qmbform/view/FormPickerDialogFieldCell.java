@@ -31,9 +31,6 @@ public class FormPickerDialogFieldCell extends FormDetailTextInlineFieldCell {
         if (getRowDescriptor().getDisabled()) {
             getDetailTextView().setCompoundDrawables(null, null, null, null);
         }
-        if (getRowDescriptor().getHint() > 0) {
-            getDetailTextView().setHint(getRowDescriptor().getHint());
-        }
     }
 
     @Override
