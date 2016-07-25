@@ -29,6 +29,8 @@ public class FormDatetimeDialogFieldCell extends FormDateDialogFieldCell impleme
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        mCalendar.set(year, monthOfYear, dayOfMonth);
+
         TimePickerDialog dialog = new TimePickerDialog(getContext(), this, mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE), true);
         dialog.show();
     }
