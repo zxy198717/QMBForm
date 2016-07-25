@@ -85,18 +85,12 @@ public class FormDateFieldCell extends FormDetailTextInlineFieldCell {
     }
 
     protected void updateDateLabel(Date date) {
-
-        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getContext());
-        String s = dateFormat.format(date);
-        getDetailTextView().setText(s);
-
+        getDetailTextView().setText(android.text.format.DateFormat.format("yyyy-MM-dd", date).toString());
     }
 
     @Override
     public void onCellSelected() {
         super.onCellSelected();
-
-
     }
 
     public TextView getTextView() {
