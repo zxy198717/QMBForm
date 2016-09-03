@@ -1,6 +1,9 @@
 package com.quemb.qmbform.view;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.bigkoo.pickerview.TimePickerView;
 import com.quemb.qmbform.descriptor.RowDescriptor;
@@ -24,7 +27,7 @@ public class FormDatetimeDialogFieldCell extends FormDetailTextInlineFieldCell {
     @Override
     public void onCellSelected() {
 
-        TimePickerView pvTime = new TimePickerView(getContext(), TimePickerView.Type.YEAR_MONTH_DAY);
+        TimePickerView pvTime = new TimePickerView(getContext(), TimePickerView.Type.ALL);
 
         Date currentDate = new Date();
 
@@ -51,5 +54,13 @@ public class FormDatetimeDialogFieldCell extends FormDetailTextInlineFieldCell {
         });
 
         pvTime.show();
+
+        View view = ((Activity)getContext()).getWindow().peekDecorView();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) view.getContext( ).getSystemService( Context.INPUT_METHOD_SERVICE );
+            if ( imm.isActive( ) ) {
+                imm.hideSoftInputFromWindow( view.getApplicationWindowToken( ) , 0 );
+            }
+        }
     }
 }

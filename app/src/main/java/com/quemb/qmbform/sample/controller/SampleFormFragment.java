@@ -246,6 +246,9 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
         timeDialogDisabled.setDisabled(true);
         sectionDescriptor4.addRow(timeDialogDisabled);
 
+        RowDescriptor datetime = RowDescriptor.newInstance("datetime",RowDescriptor.FormRowDescriptorTypeDateTime, "DateTime selected", new Value<Date>(new Date()) );
+        sectionDescriptor4.addRow(datetime);
+
         mFormManager = new FormManager();
         mFormManager.setup(descriptor, mListView, this);
         Button button1 = new Button(getContext());
