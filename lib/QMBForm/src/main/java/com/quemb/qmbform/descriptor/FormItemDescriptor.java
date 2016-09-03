@@ -87,6 +87,11 @@ public class FormItemDescriptor {
     }
 
     public HashMap<String, Object> getCellConfig() {
+
+        if (mCellConfig == null) {
+            mCellConfig = new HashMap<>();
+        }
+
         return mCellConfig;
     }
 
