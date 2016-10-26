@@ -4,6 +4,7 @@ import com.quemb.qmbform.adapter.FormAdapter;
 import com.quemb.qmbform.adapter.FormRecyclerViewAdapter;
 import com.quemb.qmbform.descriptor.FormDescriptor;
 import com.quemb.qmbform.descriptor.FormItemDescriptor;
+import com.quemb.qmbform.descriptor.FormRecycledViewPool;
 import com.quemb.qmbform.descriptor.OnFormRowChangeListener;
 import com.quemb.qmbform.descriptor.OnFormRowValueChangedListener;
 import com.quemb.qmbform.descriptor.RowDescriptor;
@@ -62,6 +63,7 @@ public class FormManager implements OnFormRowChangeListener, OnFormRowValueChang
         mFormDescriptor.setOnFormRowValueChangedListener(this);
         mRecyclerView.setAdapter(formRecyclerViewAdapter);
         mRecyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+        mRecyclerView.setRecycledViewPool(new FormRecycledViewPool());
     }
 
     public void setup(FormDescriptor formDescriptor, final RecyclerView recyclerView, Fragment fragment) {
