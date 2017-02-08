@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.github.lzyzsd.circleprogress.CircleProgress;
+import com.kbeanie.multipicker.api.entity.ChosenImage;
 import com.quemb.qmbform.R;
 import com.quemb.qmbform.brower.PhotoBrowserActivity;
 import com.quemb.qmbform.descriptor.MediaFile;
@@ -27,12 +29,14 @@ import com.quemb.qmbform.pojo.ProcessedFile;
 import com.quemb.qmbform.widget.PhotoBrowserViewPager;
 import com.quemb.qmbform.widget.SquareImageView;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import im.years.imagepicker.ImagePickerManager;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
@@ -40,11 +44,15 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
     private static final int REQUEST_IMAGE = 124;
     private static final int REQUEST_IMAGE_PREVIEW = 125;
     public static final String MAX_COUNT = "MAX_COUNT";
+    public static final String IMAGE_CROP = "IMAGE_CROP";
 
     GridView gridView;
     ArrayList<ProcessedFile> imageItems;
     ImageGridAdapter imageGridAdapter;
     private int max;
+    private boolean imageCrop;
+
+    private ImagePickerManager mImagePickerManager;
 
     class MyTask extends TimerTask{
         @Override
@@ -69,6 +77,13 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
     @Override
     protected void init() {
         super.init();
+
+        if(getRowDescriptor().getFragment() != null) {
+            mImagePickerManager = new ImagePickerManager(getRowDescriptor().getFragment());
+        } else {
+            mImagePickerManager = new ImagePickerManager((Activity)getContext());
+        }
+
         gridView = (GridView) findViewById(R.id.gridView);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -78,7 +93,11 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
                     if (imageItems.size() >= max) {
                         showToast("最多可选择" + max + "张图片");
                     } else {
-                        multipleImagesPicker();
+                        if (imageCrop) {
+                            pickPhoto();
+                        } else {
+                            multipleImagesPicker();
+                        }
                     }
                 } else {
                     Intent intent = new Intent(getContext(), PhotoBrowserActivity.class);
@@ -100,6 +119,10 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
         if (getFormItemDescriptor().getCellConfig() != null) {
             if (getFormItemDescriptor().getCellConfig().containsKey(MAX_COUNT)) {
                 max = Integer.valueOf(getFormItemDescriptor().getCellConfig().get(MAX_COUNT).toString());
+            }
+
+            if (getFormItemDescriptor().getCellConfig().containsKey(IMAGE_CROP)) {
+                imageCrop = Boolean.valueOf(getFormItemDescriptor().getCellConfig().get(IMAGE_CROP).toString());
             }
         }
 
@@ -174,6 +197,38 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
             timer.purge();
             timer = null;
         }
+    }
+
+    private ImagePickerManager.ImagePickerListener imagePickerListener = new ImagePickerManager.ImagePickerListener() {
+        @Override
+        public void onImageChosen(final ChosenImage image) {
+            gridView.post(new Runnable() {
+                @Override
+                public void run() {
+                    String path = image.getThumbnailSmallPath();
+                    if (!findImage(path)) {
+                        imageItems.add(new ProcessedFile(path));
+                    }
+                    onValueChanged(new Value<List<ProcessedFile>>(imageItems));
+                    imageGridAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+
+        @Override
+        public void onError(String reason) {
+            showToast(reason);
+        }
+    };
+
+    private void pickPhoto() {
+        this.setWaitingActivityResult(true);
+        mImagePickerManager.pickImage(imageCrop, imagePickerListener);
+    }
+
+    public void takePhoto() {
+        this.setWaitingActivityResult(true);
+        mImagePickerManager.takePicture(imageCrop, imagePickerListener);
     }
 
     protected void multipleImagesPicker() {
@@ -285,6 +340,8 @@ public class FormMultipleProcessedImageFieldCell extends FormTitleFieldCell {
                 onValueChanged(new Value<List<ProcessedFile>>(this.imageItems));
                 imageGridAdapter.notifyDataSetChanged();
             }
+        } else {
+            mImagePickerManager.onActivityResult(requestCode, resultCode, data);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
