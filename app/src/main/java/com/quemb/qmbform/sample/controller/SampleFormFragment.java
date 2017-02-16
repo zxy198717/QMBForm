@@ -122,7 +122,6 @@ public class SampleFormFragment extends Fragment implements OnFormRowValueChange
         RowDescriptor rowDescriptorUploadImages = RowDescriptor.newInstance("uploadimages", RowDescriptor.FormRowDescriptorTypeMultipleProcessedImage, "Upload Images");
         config = new HashMap<>();
         config.put(FormMultipleProcessedImageFieldCell.MAX_COUNT, 9);
-        config.put(FormMultipleProcessedImageFieldCell.IMAGE_CROP, true);
         rowDescriptorUploadImages.setCellConfig(config);
         sectionDescriptor.addRow(rowDescriptorUploadImages);
 

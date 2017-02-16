@@ -37,7 +37,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'info.hoang8f:android-segmented:1.0.5'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.github.zxy198717:MultiImageSelector:d4e33898af'
+    compile 'com.github.zxy198717:MultiImageSelector:4e5df13832'
     compile 'com.github.zxy198717:image-picker-crop-wrapper:83358f19d5'
     compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
     compile 'me.relex:circleindicator:1.2.1@aar'
